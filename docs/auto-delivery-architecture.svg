@@ -1,0 +1,151 @@
+<svg width="1200" height="850" viewBox="0 0 1200 850" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font: 700 30px 'Microsoft YaHei', 'Noto Sans CJK SC', Arial, sans-serif; fill: #172554; }
+      .subtitle { font: 400 15px 'Microsoft YaHei', 'Noto Sans CJK SC', Arial, sans-serif; fill: #475569; }
+      .section-title { font: 700 19px 'Microsoft YaHei', 'Noto Sans CJK SC', Arial, sans-serif; fill: #0f172a; }
+      .box-title { font: 700 17px 'Microsoft YaHei', 'Noto Sans CJK SC', Arial, sans-serif; fill: #0f172a; }
+      .box-text { font: 400 13px 'Microsoft YaHei', 'Noto Sans CJK SC', Arial, sans-serif; fill: #334155; }
+      .small-text { font: 400 12px 'Microsoft YaHei', 'Noto Sans CJK SC', Arial, sans-serif; fill: #475569; }
+      .tiny-text { font: 400 11px 'Microsoft YaHei', 'Noto Sans CJK SC', Arial, sans-serif; fill: #64748b; }
+      .layer { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1.5; rx: 22; }
+      .frontend { fill: #eff6ff; stroke: #60a5fa; stroke-width: 2; rx: 16; }
+      .backend { fill: #f0fdf4; stroke: #4ade80; stroke-width: 2; rx: 16; }
+      .module { fill: #ffffff; stroke: #86efac; stroke-width: 1.5; rx: 12; }
+      .data { fill: #fff7ed; stroke: #fb923c; stroke-width: 2; rx: 16; }
+      .external { fill: #fef2f2; stroke: #f87171; stroke-width: 2; rx: 16; }
+      .security { fill: #faf5ff; stroke: #c084fc; stroke-width: 1.8; rx: 14; }
+      .arrow { stroke: #334155; stroke-width: 2.2; fill: none; marker-end: url(#arrowhead); }
+      .arrow-dashed { stroke: #64748b; stroke-width: 2; fill: none; stroke-dasharray: 8 6; marker-end: url(#arrowhead-gray); }
+      .arrow-label { font: 600 12px 'Microsoft YaHei', 'Noto Sans CJK SC', Arial, sans-serif; fill: #334155; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#334155" />
+    </marker>
+    <marker id="arrowhead-gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="850" fill="#ffffff"/>
+
+  <text x="600" y="48" text-anchor="middle" class="title">自动发货平台系统架构图</text>
+  <text x="600" y="76" text-anchor="middle" class="subtitle">面向淘宝 / 闲鱼虚拟商品卖家：兑换码自动发货 + Steam 礼物机器人</text>
+
+  <!-- Frontend layer -->
+  <rect x="70" y="110" width="1060" height="120" class="layer"/>
+  <text x="95" y="140" class="section-title">用户入口层</text>
+
+  <rect x="160" y="155" width="230" height="55" class="frontend" filter="url(#shadow)"/>
+  <text x="275" y="178" text-anchor="middle" class="box-title">卖家管理后台</text>
+  <text x="275" y="198" text-anchor="middle" class="box-text">浏览器 / HTML 模板 / 后期可换 React</text>
+
+  <rect x="485" y="155" width="230" height="55" class="frontend" filter="url(#shadow)"/>
+  <text x="600" y="178" text-anchor="middle" class="box-title">运营看板</text>
+  <text x="600" y="198" text-anchor="middle" class="box-text">订单、库存、发货状态、告警</text>
+
+  <rect x="810" y="155" width="230" height="55" class="frontend" filter="url(#shadow)"/>
+  <text x="925" y="178" text-anchor="middle" class="box-title">配置中心</text>
+  <text x="925" y="198" text-anchor="middle" class="box-text">平台账号、商品映射、机器人账号</text>
+
+  <!-- Backend layer -->
+  <rect x="70" y="285" width="1060" height="305" class="layer"/>
+  <text x="95" y="315" class="section-title">Rust 后端服务层（axum + tokio）</text>
+
+  <rect x="115" y="340" width="190" height="80" class="backend" filter="url(#shadow)"/>
+  <text x="210" y="368" text-anchor="middle" class="box-title">API 网关</text>
+  <text x="210" y="390" text-anchor="middle" class="box-text">axum 路由</text>
+  <text x="210" y="408" text-anchor="middle" class="small-text">REST / WebSocket</text>
+
+  <rect x="355" y="340" width="190" height="80" class="module" filter="url(#shadow)"/>
+  <text x="450" y="368" text-anchor="middle" class="box-title">商品与订单模块</text>
+  <text x="450" y="390" text-anchor="middle" class="box-text">Product / Order</text>
+  <text x="450" y="408" text-anchor="middle" class="small-text">状态流转、查询、统计</text>
+
+  <rect x="595" y="340" width="190" height="80" class="module" filter="url(#shadow)"/>
+  <text x="690" y="368" text-anchor="middle" class="box-title">发货引擎</text>
+  <text x="690" y="390" text-anchor="middle" class="box-text">DeliveryHandler trait</text>
+  <text x="690" y="408" text-anchor="middle" class="small-text">按商品类型调度发货</text>
+
+  <rect x="835" y="340" width="190" height="80" class="module" filter="url(#shadow)"/>
+  <text x="930" y="368" text-anchor="middle" class="box-title">定时任务</text>
+  <text x="930" y="390" text-anchor="middle" class="box-text">tokio scheduler</text>
+  <text x="930" y="408" text-anchor="middle" class="small-text">轮询订单、重试、清理</text>
+
+  <rect x="115" y="465" width="190" height="80" class="module" filter="url(#shadow)"/>
+  <text x="210" y="493" text-anchor="middle" class="box-title">平台适配层</text>
+  <text x="210" y="515" text-anchor="middle" class="box-text">Platform trait</text>
+  <text x="210" y="533" text-anchor="middle" class="small-text">淘宝 / 闲鱼 / 手动订单</text>
+
+  <rect x="355" y="465" width="190" height="80" class="module" filter="url(#shadow)"/>
+  <text x="450" y="493" text-anchor="middle" class="box-title">兑换码库存</text>
+  <text x="450" y="515" text-anchor="middle" class="box-text">生成 / 导入 / 分配</text>
+  <text x="450" y="533" text-anchor="middle" class="small-text">unused → sold → delivered</text>
+
+  <rect x="595" y="465" width="190" height="80" class="module" filter="url(#shadow)"/>
+  <text x="690" y="493" text-anchor="middle" class="box-title">Steam Bot 模块</text>
+  <text x="690" y="515" text-anchor="middle" class="box-text">登录 / 加好友 / 送礼</text>
+  <text x="690" y="533" text-anchor="middle" class="small-text">机器人状态管理</text>
+
+  <rect x="835" y="465" width="190" height="80" class="security" filter="url(#shadow)"/>
+  <text x="930" y="493" text-anchor="middle" class="box-title">安全与日志</text>
+  <text x="930" y="515" text-anchor="middle" class="box-text">tracing / 鉴权 / 加密</text>
+  <text x="930" y="533" text-anchor="middle" class="small-text">Token、密码、兑换码保护</text>
+
+  <!-- Data layer -->
+  <rect x="70" y="645" width="1060" height="120" class="layer"/>
+  <text x="95" y="675" class="section-title">数据与外部系统层</text>
+
+  <rect x="115" y="695" width="210" height="55" class="data" filter="url(#shadow)"/>
+  <text x="220" y="718" text-anchor="middle" class="box-title">SQLite / PostgreSQL</text>
+  <text x="220" y="738" text-anchor="middle" class="box-text">商品、订单、兑换码、机器人账号</text>
+
+  <rect x="385" y="695" width="210" height="55" class="external" filter="url(#shadow)"/>
+  <text x="490" y="718" text-anchor="middle" class="box-title">淘宝开放平台</text>
+  <text x="490" y="738" text-anchor="middle" class="box-text">订单查询、消息发送、发货回传</text>
+
+  <rect x="655" y="695" width="210" height="55" class="external" filter="url(#shadow)"/>
+  <text x="760" y="718" text-anchor="middle" class="box-title">闲鱼 / 手动订单</text>
+  <text x="760" y="738" text-anchor="middle" class="box-text">先半自动，后续扩展适配</text>
+
+  <rect x="925" y="695" width="165" height="55" class="external" filter="url(#shadow)"/>
+  <text x="1007" y="718" text-anchor="middle" class="box-title">Steam 平台</text>
+  <text x="1007" y="738" text-anchor="middle" class="box-text">好友、库存、礼物交易</text>
+
+  <!-- Arrows from frontend to backend -->
+  <path d="M275 210 C275 245, 210 250, 210 338" class="arrow"/>
+  <text x="230" y="265" class="arrow-label">HTTP 请求</text>
+  <path d="M600 210 C600 250, 450 250, 450 338" class="arrow"/>
+  <text x="500" y="265" class="arrow-label">查询统计</text>
+  <path d="M925 210 C925 250, 930 250, 930 338" class="arrow"/>
+  <text x="940" y="265" class="arrow-label">配置变更</text>
+
+  <!-- Arrows inside backend -->
+  <path d="M305 380 L352 380" class="arrow"/>
+  <path d="M545 380 L592 380" class="arrow"/>
+  <path d="M785 380 L832 380" class="arrow"/>
+  <path d="M690 420 L690 462" class="arrow"/>
+  <path d="M595 505 L548 505" class="arrow"/>
+  <path d="M355 505 L308 505" class="arrow"/>
+  <path d="M930 420 L930 462" class="arrow-dashed"/>
+
+  <!-- Backend to data/external -->
+  <path d="M450 545 C450 610, 220 610, 220 692" class="arrow"/>
+  <text x="270" y="620" class="arrow-label">SQL 读写</text>
+
+  <path d="M210 545 C210 620, 490 620, 490 692" class="arrow"/>
+  <text x="360" y="620" class="arrow-label">平台 API</text>
+
+  <path d="M210 545 C210 635, 760 635, 760 692" class="arrow-dashed"/>
+  <text x="515" y="650" class="arrow-label">扩展适配</text>
+
+  <path d="M690 545 C690 610, 1007 610, 1007 692" class="arrow"/>
+  <text x="845" y="620" class="arrow-label">机器人操作</text>
+
+  <!-- Bottom notes -->
+  <text x="80" y="810" class="small-text">推荐第一阶段实现：SQLite + axum + 兑换码库存 + 手动模拟订单，实现“创建订单 → 分配兑换码 → 标记已发货”的最小闭环。</text>
+  <text x="80" y="832" class="tiny-text">后续扩展：淘宝 OAuth / 订单轮询、Steam Bot、多机器人调度、告警通知、Docker 部署。</text>
+</svg>

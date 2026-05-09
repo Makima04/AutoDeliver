@@ -1,0 +1,16 @@
+# 数据库连接配置
+[database]
+# 开发环境使用 SQLite，零配置
+url = "sqlite:./data/auto-delivery.db"
+
+# 生产环境可切换 PostgreSQL
+# url = "postgres://user:password@localhost/auto-delivery"
+
+# Web 服务配置
+[server]
+host = "127.0.0.1"
+port = 8080
+
+# 日志级别: trace, debug, info, warn, error
+[logging]
+level = "info"
