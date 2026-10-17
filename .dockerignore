@@ -1,0 +1,16 @@
+.git
+.github
+.workbuddy
+target
+data
+data.db
+*.db
+docs
+integrations
+*.md
+!README.md
+.gitignore
+Dockerfile
+.dockerignore
+docker-compose.yml
+deploy

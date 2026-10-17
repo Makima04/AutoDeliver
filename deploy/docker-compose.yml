@@ -1,0 +1,28 @@
+name: autodeliver
+
+services:
+  autodeliver:
+    image: ${AUTODELIVER_IMAGE:-ghcr.io/makima04/autodeliver:latest}
+    container_name: autodeliver
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./data:/app/data
+      - ./config.toml:/app/config.toml:ro
+    ports:
+      # 只绑本机回环：同网络的 AstrBot 走 http://autodeliver:8080，
+      # 这个端口仅供 SSH 隧道 / 服务器本机调试，不暴露到局域网。
+      - "127.0.0.1:8080:8080"
+    networks:
+      - autodeliver
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8080/"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+
+networks:
+  autodeliver:
+    name: autodeliver

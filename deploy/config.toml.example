@@ -1,0 +1,29 @@
+# AutoDeliver 容器部署配置模板
+# 首次部署时复制为 config.toml 并改掉密码与 token：
+#   cp config.toml.example config.toml
+
+[database]
+# 容器内固定写到 /app/data，宿主机通过 volume 持久化
+url = "sqlite:/app/data/auto-delivery.db"
+
+[server]
+# 容器内必须监听 0.0.0.0，否则同网络下的 AstrBot 容器连不上
+host = "0.0.0.0"
+port = 8080
+
+[auth]
+admin_username = "admin"
+# ⚠️ 上线前务必改掉
+admin_password = "CHANGE_ME_STRONG_PASSWORD"
+# ⚠️ AstrBot 插件可以直接用这个静态 token 免登录，务必改掉
+session_token = "CHANGE_ME_LONG_RANDOM_TOKEN"
+
+[logging]
+level = "info"
+
+[xianyu]
+enabled = true
+webhook_secret = "CHANGE_ME_WEBHOOK_SECRET"
+h5_app_key = "34839810"
+open_api_base = "https://open.goofish.com"
+reply_template = "【自动发货】感谢购买《{product_name}》！\n您的订单号：{order_id}\n发货内容：{delivery_content}\n如有问题请随时留言。"

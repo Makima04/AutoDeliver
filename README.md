@@ -113,6 +113,39 @@ cargo run
 
 ---
 
+## Docker 部署
+
+镜像里已包含 `curl`（闲鱼 MTOP / IM / 通知全靠外部 curl 进程）、`static/` 与 `migrations/`，
+数据库落在 volume `/app/data`，容器重建不丢数据。
+
+```bash
+# 服务器上
+mkdir -p /home/orangepi/autodeliver/data && cd /home/orangepi/autodeliver
+cp config.toml.example config.toml    # 改掉 admin_password 与 session_token
+docker compose up -d
+curl -s http://127.0.0.1:8080/ -o /dev/null -w '%{http_code}\n'   # 200
+```
+
+`deploy/docker-compose.yml` 只把 8080 绑到 `127.0.0.1`（不暴露局域网），并通过 `autodeliver`
+网络给同机的 AstrBot 容器使用：
+
+```bash
+docker network connect autodeliver astrbot
+# AstrBot 插件里 base_url 填 http://autodeliver:8080
+```
+
+构建与分发：
+
+| 场景 | 做法 |
+|------|------|
+| 本机 arm64 → 局域网服务器 | `./deploy/ship.sh`：buildx 构建 → `docker save \| ssh docker load` → compose 起服务 → 自动接网络 |
+| x86 镜像 | 推到 `main` 后由 GitHub Actions 构建并推 `ghcr.io/makima04/autodeliver:latest`（`.github/workflows/docker.yml`，仅 `linux/amd64`） |
+
+> ⚠️ `static/`、`migrations/` 是运行时按相对路径读取的，镜像里必须保留，别只拷二进制。
+> 容器内 `config.toml` 的 `[server] host` 必须是 `0.0.0.0`，否则其他容器连不上。
+
+---
+
 ## 自动发货流程
 
 ```
@@ -155,6 +188,17 @@ cargo run
 - `/api/settings`、`/api/system/*`
 
 除登录、Webhook、静态资源外，新增管理接口均要求 `Authorization: Bearer <token>`。
+
+---
+
+## QQ Bot 集成（AstrBot 插件）
+
+插件已独立成仓：[`astrbot_plugin_xianyu_autodeliver`](https://github.com/Makima04/astrbot_plugin_xianyu_autodeliver)，
+把本平台接到 QQ：用 `/闲鱼登录` 登录管理端、`/闲鱼扫码` 扫码添加账号、`/闲鱼删除 <id>` 指定删除、
+`/闲鱼搜索 switch` 实时搜索并由大模型总结后回传到 QQ。
+
+插件只通过本项目的 REST API 工作（Bearer Token），不重复实现闲鱼协议。
+AstrBot 插件页直接填上面的仓库地址即可安装。
 
 ---
 
