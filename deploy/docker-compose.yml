@@ -11,9 +11,10 @@ services:
       - ./data:/app/data
       - ./config.toml:/app/config.toml:ro
     ports:
-      # 只绑本机回环：同网络的 AstrBot 走 http://autodeliver:8080，
-      # 这个端口仅供 SSH 隧道 / 服务器本机调试，不暴露到局域网。
-      - "127.0.0.1:8080:8080"
+      # 容器内端口固定 8080：同网络的 AstrBot 走 http://autodeliver:8080，改宿主机端口不影响它。
+      # 宿主机侧默认 18080（8080 太容易被别的服务/路由器管理页撞上）。
+      # 只想本机调试、不暴露局域网时：AUTODELIVER_BIND=127.0.0.1 docker compose up -d
+      - "${AUTODELIVER_BIND:-0.0.0.0}:${AUTODELIVER_PORT:-18080}:8080"
     networks:
       - autodeliver
     healthcheck:

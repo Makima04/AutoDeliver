@@ -122,12 +122,19 @@ cargo run
 # 服务器上
 mkdir -p /home/orangepi/autodeliver/data && cd /home/orangepi/autodeliver
 cp config.toml.example config.toml    # 改掉 admin_password 与 session_token
+# 宿主机端口与镜像 tag 写在 .env 里（容器内始终是 8080）
+cat > .env <<'EOF'
+AUTODELIVER_IMAGE=autodeliver:local
+AUTODELIVER_PORT=18080
+AUTODELIVER_BIND=0.0.0.0
+EOF
 docker compose up -d
-curl -s http://127.0.0.1:8080/ -o /dev/null -w '%{http_code}\n'   # 200
+curl -s http://127.0.0.1:18080/ -o /dev/null -w '%{http_code}\n'   # 200
 ```
 
-`deploy/docker-compose.yml` 只把 8080 绑到 `127.0.0.1`（不暴露局域网），并通过 `autodeliver`
-网络给同机的 AstrBot 容器使用：
+`deploy/docker-compose.yml` 把宿主机 `18080` 映射到容器 `8080`（`AUTODELIVER_PORT` 可改；
+`AUTODELIVER_BIND=127.0.0.1` 可退回只允许本机访问），并通过 `autodeliver`
+网络给同机的 AstrBot 容器使用。**容器内端口固定 8080**，所以改宿主机端口不影响插件：
 
 ```bash
 docker network connect autodeliver astrbot
