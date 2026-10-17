@@ -47,6 +47,8 @@ pub fn router(pool: SqlitePool, auth: AuthConfig, xianyu: XianyuConfig) -> Route
         xianyu,
         started_at: Instant::now(),
     };
+    // 鉴权中间件要在 with_state 把 state move 走之前留一份
+    let guard_state = state.clone();
 
     Router::<AppState>::new()
         .route("/", get(hello::handler))
@@ -150,6 +152,10 @@ pub fn router(pool: SqlitePool, auth: AuthConfig, xianyu: XianyuConfig) -> Route
         .merge(scheduler::router())
         .merge(system::router())
         .with_state(state)
+        .layer(middleware::from_fn_with_state(
+            guard_state,
+            crate::guard::middleware,
+        ))
         .layer(middleware::from_fn_with_state(
             audit_pool,
             crate::audit::middleware,

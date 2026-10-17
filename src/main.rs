@@ -2,6 +2,7 @@ mod audit;
 mod config;
 mod db;
 mod error;
+mod guard;
 mod handlers;
 mod models;
 mod notify;
