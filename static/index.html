@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoDeliver 自动发货与闲鱼多店系统</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex">
+  <!-- 左侧固定导航栏 -->
+  <aside class="w-60 bg-slate-900 text-slate-200 flex flex-col justify-between shrink-0 min-h-screen">
+    <div>
+      <div class="h-15 px-5 py-4 flex items-center gap-3 border-b border-slate-800">
+        <div class="w-8 h-8 rounded-lg bg-indigo-500 text-white flex items-center justify-center font-bold">A</div>
+        <div>
+          <div class="font-bold text-white text-sm">AutoDeliver</div>
+          <div class="text-[11px] text-slate-400">闲鱼多账号自动发货</div>
+        </div>
+      </div>
+
+      <nav class="p-3.5 space-y-3 text-sm overflow-y-auto max-h-[calc(100vh-160px)]">
+        <div>
+          <div class="px-3.5 pb-1 text-[10px] font-bold tracking-wider text-slate-500">运营</div>
+          <div class="space-y-1">
+            <button onclick="switchTab('products')" id="nav-products"
+              class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition bg-indigo-600 text-white">
+              <span>📦 商品</span><span id="badge-xy-items" class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/40">0</span>
+            </button>
+            <button onclick="switchTab('inventory')" id="nav-inventory"
+              class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition text-slate-300 hover:bg-slate-800">
+              <span>🔑 卡密库存中心</span><span id="badge-products" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">0</span>
+            </button>
+            <button onclick="switchTab('orders')" id="nav-orders"
+              class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition text-slate-300 hover:bg-slate-800">
+              <span>🧾 订单管理</span><span id="badge-orders" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">0</span>
+            </button>
+            <button onclick="switchTab('messages')" id="nav-messages"
+              class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition text-slate-300 hover:bg-slate-800">
+              <span>💬 在线消息</span><span id="badge-messages" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">0</span>
+            </button>
+            <button onclick="switchTab('deliveries')" id="nav-deliveries"
+              class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition text-slate-300 hover:bg-slate-800">
+              <span>📤 发货记录</span><span id="badge-deliveries" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">0</span>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="px-3.5 pb-1 text-[10px] font-bold tracking-wider text-slate-500">闲鱼</div>
+          <div class="space-y-1">
+            <button onclick="switchTab('xianyu')" id="nav-xianyu"
+              class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition text-slate-300 hover:bg-slate-800">
+              <span>🐟 闲鱼账号</span><span id="badge-xianyu" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">0</span>
+            </button>
+            <button onclick="switchTab('market')" id="nav-market"
+              class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition text-slate-300 hover:bg-slate-800">
+              <span>📊 搜索分析</span><span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300">实时</span>
+            </button>
+            <button onclick="switchTab('autodeliver')" id="nav-autodeliver"
+              class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition text-slate-300 hover:bg-slate-800">
+              <span>⚡ 自动发货</span><span id="badge-autodeliver" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">-</span>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="px-3.5 pb-1 text-[10px] font-bold tracking-wider text-slate-500">系统</div>
+          <div class="space-y-1">
+            <button onclick="switchTab('scheduler')" id="nav-scheduler"
+              class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition text-slate-300 hover:bg-slate-800">
+              <span>⏱️ 定时任务</span><span id="badge-scheduler" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">0</span>
+            </button>
+            <button onclick="switchTab('logs')" id="nav-logs"
+              class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition text-slate-300 hover:bg-slate-800">
+              <span>📝 操作日志</span><span id="badge-logs" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">0</span>
+            </button>
+            <button onclick="switchTab('notifications')" id="nav-notifications"
+              class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition text-slate-300 hover:bg-slate-800">
+              <span>🔔 通知设置</span><span id="badge-notifications" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">0</span>
+            </button>
+            <button onclick="switchTab('system')" id="nav-system"
+              class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition text-slate-300 hover:bg-slate-800">
+              <span>⚙️ 系统设置</span>
+            </button>
+            <button onclick="switchTab('admins')" id="nav-admins"
+              class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition text-slate-300 hover:bg-slate-800">
+              <span>🛡️ 管理员</span>
+            </button>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div class="p-4 border-t border-slate-800 bg-slate-950/40 flex items-center justify-between">
+      <div class="text-xs font-semibold text-white" id="admin-user-label">管理员: 未登录</div>
+      <button onclick="openLoginModal()" class="text-xs px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200">登录</button>
+    </div>
+  </aside>
+
+  <!-- 右侧主工作区 -->
+  <div class="flex-1 flex flex-col min-w-0">
+    <header class="h-15 py-3.5 bg-white border-b border-slate-200 px-8 flex items-center justify-between sticky top-0 z-10">
+      <h1 id="page-title" class="text-lg font-bold text-slate-900">商品（选择闲鱼账号自动同步上架商品 · 增删改与绑定自动发货）</h1>
+      <div class="flex items-center gap-3">
+        <span id="top-xianyu-pill" class="text-xs px-3 py-1 rounded-full font-medium bg-slate-100 text-slate-600">已绑定 0 个闲鱼账号</span>
+        <button onclick="refreshAll()" class="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium">刷新</button>
+      </div>
+    </header>
+
+    <main class="p-6 sm:p-8 space-y-6 max-w-7xl w-full mx-auto">
+      <div id="toast" class="hidden rounded-xl px-4 py-3 text-sm font-medium border shadow-sm"></div>
+
+      <!-- ==================== 视图 1：📦 商品（选择闲鱼账号后自动同步显示闲鱼商品 + 状态筛选 + 增删改 + 绑定卡密商品） ==================== -->
+      <section id="view-products" class="space-y-4">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-slate-200 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex flex-wrap items-center gap-3">
+              <label class="text-sm font-bold text-slate-900">当前闲鱼账号：</label>
+              <select id="prod-account-select" onchange="onSelectAccountInProductsPage(Number(this.value))"
+                class="rounded-lg border border-slate-300 px-3.5 py-2 text-sm font-semibold text-slate-900 bg-slate-50 focus:outline-none focus:border-indigo-500">
+              </select>
+
+              <!-- 商品状态筛选器：用于只展示对应状态 -->
+              <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-lg border border-slate-200">
+                <button onclick="setProductStatusFilter('all')" id="status-filter-all"
+                  class="px-2.5 py-1 rounded-md text-xs font-semibold transition bg-white text-indigo-600 shadow-xs">
+                  全部 (<span id="count-status-all">0</span>)
+                </button>
+                <button onclick="setProductStatusFilter('on_sale')" id="status-filter-on_sale"
+                  class="px-2.5 py-1 rounded-md text-xs font-semibold transition text-slate-600 hover:text-slate-900">
+                  🟢 在售 (<span id="count-status-on_sale">0</span>)
+                </button>
+                <button onclick="setProductStatusFilter('off_shelf')" id="status-filter-off_shelf"
+                  class="px-2.5 py-1 rounded-md text-xs font-semibold transition text-slate-600 hover:text-slate-900">
+                  ⚪ 下架 (<span id="count-status-off_shelf">0</span>)
+                </button>
+              </div>
+
+              <span id="sync-status-hint" class="text-xs text-slate-500">每 15 秒自动与闲鱼同步上下架与新发商品</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="manualSyncCurrentAccountItems()"
+                class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border border-slate-300 shadow-xs">
+                🔄 同步闲鱼商品
+              </button>
+              <button onclick="runAutoDeliverScan()"
+                class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs">
+                ⚡ 扫描待发货订单并自动发卡
+              </button>
+              <button onclick="openXianyuItemModal()"
+                class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs">
+                + 添加闲鱼商品
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600">
+                  <th class="py-3.5 px-5">闲鱼宝贝标题 / 宝贝 ID / 链接</th>
+                  <th class="py-3.5 px-3">金额（直接改价）</th>
+                  <th class="py-3.5 px-3">库存 / 状态</th>
+                  <th class="py-3.5 px-4">绑定自动发货的卡密商品</th>
+                  <th class="py-3.5 px-5 text-right">操作</th>
+                </tr>
+              </thead>
+              <tbody id="xianyu-items-tbody" class="divide-y divide-slate-100 text-sm"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 视图 2：🔑 卡密库存中心（创建、修改、删除卡密商品 + 管理兑换码库存） ==================== -->
+      <section id="view-inventory" class="hidden space-y-5">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+            <div class="text-xs font-medium text-slate-500">卡密商品</div>
+            <div id="prod-stat-total" class="text-2xl font-bold text-slate-900 mt-1">0</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 border border-indigo-200 shadow-sm">
+            <div class="text-xs font-medium text-indigo-600">卡密总数</div>
+            <div id="prod-stat-codes" class="text-2xl font-bold text-indigo-600 mt-1">0</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 border border-emerald-200 shadow-sm">
+            <div class="text-xs font-medium text-emerald-600">可用库存</div>
+            <div id="prod-stat-unused" class="text-2xl font-bold text-emerald-600 mt-1">0</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 border border-rose-200 shadow-sm">
+            <div class="text-xs font-medium text-rose-600">低库存商品</div>
+            <div id="prod-stat-low" class="text-2xl font-bold text-rose-600 mt-1">0</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-6 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+          <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">卡密商品管理（自动发货商品）</h2>
+              <p class="text-xs text-slate-500 mt-0.5">在此创建卡密商品并导入卡密，在「商品」页与闲鱼商品绑定后即可自动发货</p>
+            </div>
+            <button onclick="openCardProductModal()"
+              class="px-3.5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shrink-0">
+              + 创建卡密商品
+            </button>
+          </div>
+          <div class="overflow-x-auto flex-1">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600">
+                  <th class="py-3 px-4">ID / 卡密商品名称</th>
+                  <th class="py-3 px-3">定价</th>
+                  <th class="py-3 px-3">已绑闲鱼宝贝ID</th>
+                  <th class="py-3 px-4 text-right">操作</th>
+                </tr>
+              </thead>
+              <tbody id="card-products-tbody" class="divide-y divide-slate-100 text-xs sm:text-sm"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="lg:col-span-6 bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-base font-bold text-slate-900">
+                卡密库存明细 <span id="selected-card-prod-label" class="text-indigo-600 text-sm font-semibold">（请先在左侧选择卡密商品）</span>
+              </h3>
+              <p id="selected-template-info" class="text-xs text-slate-500 mt-0.5"></p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 text-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <div><div class="text-[11px] text-slate-500">可用 (unused)</div><div id="inv-unused" class="text-lg font-bold text-emerald-600">0</div></div>
+            <div><div class="text-[11px] text-slate-500">已发 (sold)</div><div id="inv-sold" class="text-lg font-bold text-amber-600">0</div></div>
+            <div><div class="text-[11px] text-slate-500">总计 (total)</div><div id="inv-total" class="text-lg font-bold text-slate-900">0</div></div>
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-xs font-semibold text-slate-700">批量导入卡密（每行一条兑换码）</label>
+            <textarea id="import-codes-input" rows="3" placeholder="在此粘贴卡密，每行一条"
+              class="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs font-mono"></textarea>
+            <button onclick="importCodes()" class="w-full py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold">
+              批量导入到当前卡密商品
+            </button>
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-600">卡密列表</span>
+              <div class="flex gap-1.5">
+                <input id="search-code-input" type="text" placeholder="输入精确卡密查询..."
+                  class="rounded border border-slate-300 px-2.5 py-1 text-xs font-mono" />
+                <button onclick="lookupSingleCode()" class="px-2.5 py-1 rounded bg-slate-900 text-white text-xs">查询</button>
+              </div>
+            </div>
+            <div class="max-h-52 overflow-y-auto border border-slate-200 rounded-xl divide-y divide-slate-100 text-xs" id="codes-list"></div>
+          </div>
+        </div>
+        </div>
+      </section>
+
+      <!-- ==================== 视图 3：🐟 闲鱼多账号管理 ==================== -->
+      <section id="view-xianyu" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-6 bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <h2 class="text-base font-bold text-slate-900">已绑定的闲鱼账号列表</h2>
+            <span id="accounts-count-label" class="text-xs font-semibold text-indigo-600">0 个账号</span>
+          </div>
+          <div id="xianyu-accounts-list" class="space-y-2.5"></div>
+        </div>
+
+        <div class="lg:col-span-6 bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+          <h3 class="text-base font-bold text-slate-900">➕ 添加 / 登录真实闲鱼卖家账号</h3>
+          <div class="flex gap-2 border-b border-slate-200 pb-2.5">
+            <button onclick="setXianyuMode('qrcode')" id="mode-btn-qrcode"
+              class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white">📱 手机扫码登录</button>
+            <button onclick="setXianyuMode('cookie')" id="mode-btn-cookie"
+              class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700">粘贴 Cookie 登录</button>
+            <button onclick="setXianyuMode('open_api')" id="mode-btn-openapi"
+              class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700">闲鱼管家 OpenAPI</button>
+          </div>
+
+          <div id="xy-form-qrcode" class="rounded-xl border border-slate-200 bg-slate-50 p-4 flex items-center gap-4">
+            <div class="w-32 h-32 bg-white rounded-lg border border-slate-200 flex items-center justify-center p-1.5 shrink-0">
+              <img id="xy-qr-img" src="" alt="二维码" class="w-28 h-28 object-contain hidden" />
+              <div id="xy-qr-placeholder" class="text-center text-[11px] text-slate-400">点击右侧获取二维码</div>
+            </div>
+            <div class="space-y-2 text-xs">
+              <div class="font-bold text-slate-900">使用手机闲鱼 / 淘宝 App 扫码</div>
+              <p id="xy-qr-status-desc" class="text-slate-500 text-[11px] leading-relaxed">
+                直接请求 passport.goofish.com 生成实时二维码，确认后自动保存账号。
+              </p>
+              <button onclick="startXianyuQrLogin()" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 text-white font-semibold">
+                🔄 获取实时二维码
+              </button>
+            </div>
+          </div>
+
+          <div id="xy-form-cookie" class="hidden space-y-2.5 text-xs">
+            <input id="xy-cookie-nick" type="text" placeholder="账号备注名称（可选）" class="w-full rounded-lg border border-slate-300 px-3 py-2" />
+            <textarea id="xy-cookie-raw" rows="4" placeholder="粘贴在 https://www.goofish.com 登录后请求头中的完整 Cookie"
+              class="w-full rounded-lg border border-slate-300 px-3 py-2 font-mono"></textarea>
+            <button onclick="submitXianyuLogin('cookie')" class="w-full py-2 rounded-lg bg-slate-900 text-white font-semibold">
+              解析并绑定 Cookie 账号
+            </button>
+          </div>
+
+          <div id="xy-form-openapi" class="hidden space-y-2.5 text-xs">
+            <input id="xy-oa-nick" type="text" placeholder="店铺备注名称" class="w-full rounded-lg border border-slate-300 px-3 py-2" />
+            <div class="grid grid-cols-2 gap-2">
+              <input id="xy-oa-appkey" type="text" placeholder="AppKey" class="w-full rounded-lg border border-slate-300 px-3 py-2 font-mono" />
+              <input id="xy-oa-secret" type="password" placeholder="AppSecret" class="w-full rounded-lg border border-slate-300 px-3 py-2 font-mono" />
+            </div>
+            <input id="xy-oa-token" type="text" placeholder="AccessToken（可选）" class="w-full rounded-lg border border-slate-300 px-3 py-2 font-mono" />
+            <button onclick="submitXianyuLogin('open_api')" class="w-full py-2 rounded-lg bg-slate-900 text-white font-semibold">
+              保存闲鱼管家账号
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 视图 4：📊 闲鱼搜索与性价比指数分析（含商品图片与直达跳转链接） ==================== -->
+      <section id="view-market" class="hidden space-y-6">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+          <div>
+            <h2 class="text-base font-bold text-slate-900">🔍 闲鱼物品实时搜索与性价比指数分析 (`mtop.taobao.idlemtopsearch.pc.search`)</h2>
+            <p class="text-xs text-slate-500 mt-0.5">使用已绑定闲鱼账号的 `_m_h5_tk` 签名实时请求闲鱼搜索接口，统计中位价、平均价、最低价、最高价与性价比指数，支持点击图片或链接跳转闲鱼详情页</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 text-xs items-end">
+            <div class="sm:col-span-4">
+              <label class="block text-slate-600 font-semibold mb-1">搜索物品关键词 *</label>
+              <input id="mkt-keyword" type="text" placeholder="输入关键词，例如：索尼zve10单机 / Switch"
+                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-slate-600 font-semibold mb-1">最低价 (元)</label>
+              <input id="mkt-min-price" type="number" step="1" placeholder="不限" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono" />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-slate-600 font-semibold mb-1">最高价 (元)</label>
+              <input id="mkt-max-price" type="number" step="1" placeholder="不限" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono" />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-slate-600 font-semibold mb-1">排序方式</label>
+              <select id="mkt-sort" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                <option value="value_desc">按性价比指数降序</option>
+                <option value="price_asc">按价格从低到高</option>
+                <option value="price_desc">按价格从高到低</option>
+              </select>
+            </div>
+            <div class="sm:col-span-2">
+              <button onclick="runXianyuMarketSearch()" class="w-full py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold">
+                🚀 搜索并分析
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div class="bg-white rounded-xl p-4 border-2 border-indigo-500 shadow-sm">
+            <div class="text-xs font-semibold text-indigo-600">📊 中位价 (Median)</div>
+            <div id="mkt-stat-median" class="text-2xl font-bold text-slate-900 mt-1">¥-</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+            <div class="text-xs font-medium text-slate-500">📈 平均价 (Average)</div>
+            <div id="mkt-stat-avg" class="text-2xl font-bold text-slate-900 mt-1">¥-</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+            <div class="text-xs font-medium text-emerald-600">🟢 最低价 (Min)</div>
+            <div id="mkt-stat-min" class="text-2xl font-bold text-emerald-600 mt-1">¥-</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+            <div class="text-xs font-medium text-rose-600">🔴 最高价 (Max)</div>
+            <div id="mkt-stat-max" class="text-2xl font-bold text-rose-600 mt-1">¥-</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+            <div class="text-xs font-medium text-slate-500">📐 P25 ~ P75 区间</div>
+            <div id="mkt-stat-quartiles" class="text-sm font-bold text-slate-800 mt-2">¥- ~ ¥-</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+            <div class="text-xs font-medium text-amber-600">💡 建议定价区间</div>
+            <div id="mkt-stat-suggest" class="text-xs font-semibold text-slate-800 mt-1.5">-</div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="px-6 py-3.5 border-b border-slate-200 flex items-center justify-between">
+            <h3 class="text-sm font-bold text-slate-900">闲鱼搜索结果与性价比指数列表</h3>
+            <span id="mkt-source-label" class="text-xs text-slate-500">请输入关键词搜索</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600">
+                  <th class="py-3 px-5">商品图片 / 标题 / 闲鱼链接</th>
+                  <th class="py-3 px-3">价格</th>
+                  <th class="py-3 px-3">相比中位价</th>
+                  <th class="py-3 px-3">卖家 / 信用 / 想要</th>
+                  <th class="py-3 px-4">性价比指数</th>
+                  <th class="py-3 px-5">评级与分析建议</th>
+                </tr>
+              </thead>
+              <tbody id="market-items-tbody" class="divide-y divide-slate-100 text-sm"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 视图 5：🧾 订单与发货流水（含闲鱼 IM 会话扫描 + 免拼虚拟发货控制台） ==================== -->
+      <section id="view-orders" class="hidden space-y-5">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">🚚 闲鱼订单同步与自动发货控制台</h2>
+              <p class="text-xs text-slate-500 mt-0.5">
+                每 60 秒通过卖家订单列表 <span class="font-mono text-indigo-600">mtop.taobao.idle.trade.merchant.sold.get</span>
+                拉取「待发货」订单并入库（不依赖买家是否发过消息）；导入后不会自动发货，点击订单「重试」才会调用
+                <span class="font-mono text-indigo-600">consign.dummy</span> 并发送卡密。
+              </p>
+              <p class="text-xs text-slate-400 mt-0.5">
+                另有 IM 会话扫描：识别「我已付款，等待你发货」卡片，作为有聊天记录订单的补充通道。
+              </p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 shrink-0">
+              <button onclick="syncXianyuOrders()"
+                class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs">
+                📋 同步闲鱼待发货订单
+              </button>
+              <button onclick="runAutoDeliverScan()"
+                class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs">
+                🔍 扫描 IM 并自动发货
+              </button>
+            </div>
+          </div>
+
+          <div id="auto-deliver-scan-banner" class="hidden rounded-xl border border-indigo-200 bg-indigo-50/60 px-4 py-3 text-xs text-slate-700 space-y-1"></div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 text-xs items-end bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <div class="sm:col-span-3">
+              <label class="block text-slate-600 font-semibold mb-1">闲鱼订单号 (orderId) *</label>
+              <input id="manual-consign-order-id" type="text" placeholder="例如：4123456789012345678"
+                class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-mono text-xs" />
+            </div>
+            <div class="sm:col-span-3">
+              <label class="block text-slate-600 font-semibold mb-1">闲鱼宝贝 ID (itemId)</label>
+              <input id="manual-consign-item-id" type="text" placeholder="已绑定卡密商品的闲鱼宝贝 ID"
+                class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-mono text-xs" />
+            </div>
+            <div class="sm:col-span-3">
+              <label class="block text-slate-600 font-semibold mb-1">或直接指定卡密商品</label>
+              <select id="manual-consign-product-id" class="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs">
+                <option value="">-- 按闲鱼宝贝ID自动匹配 --</option>
+              </select>
+            </div>
+            <div class="sm:col-span-3">
+              <button onclick="submitManualConsignDeliver()"
+                class="w-full py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs">
+                🚚 远端虚拟确认发货 + 抽卡密
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+            <div class="text-xs font-medium text-slate-500">全部订单</div>
+            <div id="order-stat-total" class="text-2xl font-bold text-slate-900 mt-1">0</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 border border-amber-200 shadow-sm">
+            <div class="text-xs font-medium text-amber-600">待发货</div>
+            <div id="order-stat-pending" class="text-2xl font-bold text-amber-600 mt-1">0</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 border border-emerald-200 shadow-sm">
+            <div class="text-xs font-medium text-emerald-600">已发货</div>
+            <div id="order-stat-delivered" class="text-2xl font-bold text-emerald-600 mt-1">0</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 border border-rose-200 shadow-sm">
+            <div class="text-xs font-medium text-rose-600">发货失败</div>
+            <div id="order-stat-failed" class="text-2xl font-bold text-rose-600 mt-1">0</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 border border-indigo-200 shadow-sm">
+            <div class="text-xs font-medium text-indigo-600">累计金额</div>
+            <div id="order-stat-revenue" class="text-2xl font-bold text-indigo-600 mt-1">¥0.00</div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">订单与自动发货记录</h2>
+              <span class="text-xs text-slate-400">支持幂等防重：同一闲鱼订单号绝不重复扣减卡密</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+              <select id="order-filter-status" onchange="setOrderStatusFilter(this.value)"
+                class="rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs">
+                <option value="all">全部状态</option>
+                <option value="delivered">已发货</option>
+                <option value="pending">待发货</option>
+                <option value="failed">发货失败</option>
+                <option value="refunded">已退款</option>
+              </select>
+              <input id="order-search" type="text" placeholder="搜索订单号 / 买家 / 商品 / 卡密"
+                oninput="renderOrdersTable()"
+                class="w-56 rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs" />
+              <button onclick="loadOrders()" class="px-3 py-1.5 rounded-lg bg-slate-900 text-white text-xs font-semibold">刷新订单</button>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600">
+                  <th class="py-3 px-5">订单</th>
+                  <th class="py-3 px-3">渠道 / 平台单号</th>
+                  <th class="py-3 px-3">买家</th>
+                  <th class="py-3 px-3">卡密商品</th>
+                  <th class="py-3 px-3">状态</th>
+                  <th class="py-3 px-3">金额</th>
+                  <th class="py-3 px-4">发货内容</th>
+                  <th class="py-3 px-3">时间</th>
+                  <th class="py-3 px-4 text-right">操作</th>
+                </tr>
+              </thead>
+              <tbody id="orders-tbody" class="divide-y divide-slate-100 text-sm"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 新增模块容器（由 static/modules-*.js 渐进增强渲染） ==================== -->
+      <section id="view-messages" class="hidden"></section>
+      <section id="view-deliveries" class="hidden"></section>
+      <section id="view-autodeliver" class="hidden"></section>
+      <section id="view-scheduler" class="hidden"></section>
+      <section id="view-logs" class="hidden"></section>
+      <section id="view-notifications" class="hidden"></section>
+      <section id="view-system" class="hidden"></section>
+      <section id="view-admins" class="hidden"></section>
+    </main>
+  </div>
+
+  <!-- 弹窗 1：添加 / 修改闲鱼商品（含绑定卡密商品） -->
+  <div id="xy-item-modal" class="hidden fixed inset-0 bg-slate-900/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 id="xy-item-modal-title" class="text-base font-bold text-slate-900">添加闲鱼商品</h3>
+        <button onclick="closeXianyuItemModal()" class="text-slate-400">✕</button>
+      </div>
+      <input type="hidden" id="xyi-db-id" value="" />
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-700 font-semibold mb-1">闲鱼宝贝标题 *</label>
+          <input id="xyi-title" type="text" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-700 font-semibold mb-1">金额（元） *</label>
+            <input id="xyi-price-yuan" type="number" step="0.01" value="19.90" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono" />
+          </div>
+          <div>
+            <label class="block text-slate-700 font-semibold mb-1">库存数量</label>
+            <input id="xyi-stock" type="number" value="10" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-700 font-semibold mb-1">闲鱼宝贝 ID</label>
+            <input id="xyi-id" type="text" placeholder="留空则自动生成" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono" />
+          </div>
+          <div>
+            <label class="block text-slate-700 font-semibold mb-1">上架状态</label>
+            <select id="xyi-status" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+              <option value="on_sale">在售 (on_sale)</option>
+              <option value="off_shelf">已下架 (off_shelf)</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-700 font-semibold mb-1">绑定自动发货的卡密商品（可选）</label>
+          <select id="xyi-bind-product" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"></select>
+        </div>
+        <div>
+          <label class="block text-slate-700 font-semibold mb-1">宝贝描述</label>
+          <input id="xyi-desc" type="text" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeXianyuItemModal()" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-700 text-xs">取消</button>
+        <button onclick="saveXianyuItem()" class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-xs font-semibold">保存闲鱼商品</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 弹窗 2：创建 / 修改卡密商品（自动发货商品） -->
+  <div id="product-modal" class="hidden fixed inset-0 bg-slate-900/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 id="product-modal-title" class="text-base font-bold text-slate-900">创建卡密商品</h3>
+        <button onclick="closeCardProductModal()" class="text-slate-400">✕</button>
+      </div>
+      <input type="hidden" id="pm-id" value="" />
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-700 font-semibold mb-1">卡密商品名称 *</label>
+          <input id="pm-name" type="text" placeholder="例如：50元充值卡卡密池" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-700 font-semibold mb-1">参考定价（元） *</label>
+            <input id="pm-price-yuan" type="number" step="0.01" value="50.00" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono" />
+          </div>
+          <div>
+            <label class="block text-slate-700 font-semibold mb-1">启用状态</label>
+            <select id="pm-enabled" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+              <option value="true">启用自动发货</option>
+              <option value="false">暂停发货</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-700 font-semibold mb-1">发货方式</label>
+          <select id="pm-tpl-type" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+            <option value="redeem_code">一单一码卡密 (redeem_code)</option>
+            <option value="file_link">固定网盘链接/文本 (file_link)</option>
+            <option value="steam_gift">Steam 礼物 (steam_gift)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-slate-700 font-semibold mb-1">附加内容（file_link 填链接，redeem_code 留空）</label>
+          <input id="pm-tpl-content" type="text" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono" />
+        </div>
+        <div>
+          <label class="block text-slate-700 font-semibold mb-1">备注说明</label>
+          <input id="pm-desc" type="text" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeCardProductModal()" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-700 text-xs">取消</button>
+        <button onclick="saveCardProduct()" class="px-5 py-2 rounded-lg bg-indigo-600 text-white text-xs font-semibold">保存卡密商品</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 弹窗 3：管理员登录 -->
+  <div id="login-modal" class="hidden fixed inset-0 bg-slate-900/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-sm w-full p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-base font-bold text-slate-900">管理后台登录</h3>
+        <button onclick="closeLoginModal()" class="text-slate-400">✕</button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <input id="adm-user" type="text" value="admin" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+        <input id="adm-pass" type="password" value="admin123" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+      </div>
+      <button onclick="submitAdminLogin()" class="w-full py-2.5 rounded-lg bg-indigo-600 text-white text-xs font-semibold">登录</button>
+    </div>
+  </div>
+
+  <script src="/assets/modules-ops.js"></script>
+  <script src="/assets/modules-system.js"></script>
+  <script>
+    let currentTab = 'products';
+    let currentAccountId = null;
+    let xianyuAccounts = [];
+    let currentAccountItems = [];
+    let currentProductStatusFilter = 'all';
+    let currentCardProductId = null;
+    let cardProductsCache = [];
+    let qrPollTimer = null;
+    let currentQrSession = null;
+
+    function decodeNick(str) {
+      if (!str) return '';
+      try {
+        return decodeURIComponent(str);
+      } catch (_) {
+        return str;
+      }
+    }
+
+    function showToast(msg, isError = false) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.className = isError
+        ? 'rounded-xl px-4 py-3 text-sm font-medium border bg-rose-50 text-rose-700 border-rose-200 block'
+        : 'rounded-xl px-4 py-3 text-sm font-medium border bg-emerald-50 text-emerald-700 border-emerald-200 block';
+      setTimeout(() => { el.className = 'hidden'; }, 5000);
+    }
+
+    async function apiFetch(url, options = {}) {
+      const token = localStorage.getItem('adm_token');
+      const headers = new Headers(options.headers || {});
+      if (token) headers.set('Authorization', `Bearer ${token}`);
+      const res = await fetch(url, { ...options, headers });
+      const text = await res.text();
+      let data = null;
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (_) {
+        throw new Error(`接口 ${url} 返回非 JSON 响应 (HTTP ${res.status})，请在终端按 Ctrl+C 重新运行 cargo run 以加载最新后端路由`);
+      }
+      if (!res.ok) {
+        throw new Error(data.message || `请求失败 (HTTP ${res.status})`);
+      }
+      return data;
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      const tabs = ['products', 'inventory', 'orders', 'messages', 'deliveries',
+                    'xianyu', 'market', 'autodeliver',
+                    'scheduler', 'logs', 'notifications', 'system', 'admins'];
+      const titles = {
+        products: '商品（选择闲鱼账号自动同步上架商品 · 状态筛选与绑定自动发货）',
+        inventory: '卡密库存中心（创建、修改、删除卡密商品与管理兑换码库存）',
+        orders: '订单管理（筛选、状态流转、重试发货与补发消息）',
+        messages: '在线消息（会话同步、未读提醒与闲鱼 IM 回复）',
+        deliveries: '发货记录（每次自动/手动发货的完整审计流水）',
+        xianyu: '闲鱼账号登录与连接管理（扫码 / Cookie / OpenAPI 绑定）',
+        market: '闲鱼搜索与性价比指数分析（中位价 / 平均价 / 最低价 / 最高价）',
+        autodeliver: '自动发货（全局开关、发货就绪检查与扫描控制台）',
+        scheduler: '定时任务（自动发货、商品同步、消息同步与清理任务）',
+        logs: '操作日志（管理端全部变更操作审计）',
+        notifications: '通知设置（Webhook / 飞书 / ServerChan 渠道与事件规则）',
+        system: '系统设置（基础信息、安全、数据保留与备份）',
+        admins: '管理员（账号、角色、状态与登录日志）'
+      };
+      document.getElementById('page-title').textContent = titles[tab] || '';
+      tabs.forEach(t => {
+        const view = document.getElementById(`view-${t}`);
+        if (view) view.classList.toggle('hidden', t !== tab);
+        const nav = document.getElementById(`nav-${t}`);
+        if (nav) nav.className = t === tab
+          ? 'w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition bg-indigo-600 text-white'
+          : 'w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition text-slate-300 hover:bg-slate-800';
+      });
+      if (typeof window.pageLoaders?.[tab] === 'function') {
+        Promise.resolve(window.pageLoaders[tab]()).catch(e => showToast(e.message, true));
+      }
+    }
+
+    // ==================== 1. 闲鱼多账号加载与「📦 商品」页自动同步 ====================
+    async function loadXianyuAccountsAndAutoSync() {
+      try {
+        xianyuAccounts = await apiFetch('/api/xianyu/accounts');
+      } catch (e) {
+        showToast(e.message, true);
+        return;
+      }
+
+      let healthMap = {};
+      try {
+        const healthList = await apiFetch('/api/xianyu/accounts/health');
+        healthMap = Object.fromEntries((healthList || []).map(h => [h.account_id, h]));
+      } catch (_) {}
+
+      document.getElementById('badge-xianyu').textContent = xianyuAccounts.length;
+      document.getElementById('accounts-count-label').textContent = `共 ${xianyuAccounts.length} 个账号`;
+      document.getElementById('top-xianyu-pill').textContent = `已绑定 ${xianyuAccounts.length} 个闲鱼账号`;
+
+      const selectEl = document.getElementById('prod-account-select');
+      const listEl = document.getElementById('xianyu-accounts-list');
+
+      if (xianyuAccounts.length === 0) {
+        currentAccountId = null;
+        selectEl.innerHTML = '<option value="">-- 暂无闲鱼账号，请先在「闲鱼多账号管理」中添加 --</option>';
+        listEl.innerHTML = '<div class="p-4 text-center text-xs text-slate-400 bg-slate-50 rounded-xl">暂未绑定任何闲鱼账号</div>';
+        document.getElementById('xianyu-items-tbody').innerHTML =
+          '<tr><td colspan="5" class="py-10 text-center text-slate-400">尚未绑定闲鱼账号，请先前往左侧「🐟 闲鱼多账号管理」扫码或粘贴 Cookie 登录</td></tr>';
+        return;
+      }
+
+      if (!currentAccountId || !xianyuAccounts.some(a => a.id === currentAccountId)) {
+        currentAccountId = xianyuAccounts[0].id;
+      }
+
+      selectEl.innerHTML = xianyuAccounts.map((a, idx) =>
+        `<option value="${a.id}">#${idx + 1} ${decodeNick(a.seller_nick) || a.seller_id || '闲鱼账号'} (${a.auth_mode})</option>`
+      ).join('');
+      selectEl.value = String(currentAccountId);
+
+      listEl.innerHTML = xianyuAccounts.map((a, idx) => {
+        const health = healthMap[a.id] || {};
+        const connected = ['connected', 'verified', 'active'].includes(health.status) && !health.last_error;
+        const statusBadge = connected
+          ? '<span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 text-[11px] font-semibold">● 已连接</span>'
+          : '<span class="px-2 py-0.5 rounded bg-amber-50 text-amber-700 text-[11px] font-semibold">● 待校验</span>';
+        const lastVerified = a.last_verified_at ? String(a.last_verified_at).replace('T', ' ').slice(0, 19) : '从未校验';
+        return `
+        <div class="p-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <div class="text-xs space-y-0.5 min-w-0">
+              <div class="font-bold text-slate-900 truncate">#${idx + 1} ${decodeNick(a.seller_nick) || '闲鱼卖家'} (${a.auth_mode})</div>
+              <div class="text-slate-500 font-mono text-[11px] truncate">卖家ID: ${a.seller_id || '-'} · 令牌: ${a.m_h5_tk_preview || a.app_key || '-'}</div>
+              <div class="text-slate-400 text-[11px]">最后校验: ${lastVerified}</div>
+            </div>
+            <div class="shrink-0">${statusBadge}</div>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-100">
+            <div class="text-[11px] text-slate-500">
+              商品 <span class="font-bold text-slate-800">${health.items_count ?? '-'}</span> ·
+              订单 <span class="font-bold text-slate-800">${health.order_count ?? '-'}</span>
+              ${health.last_error ? `<span class="text-rose-600"> · ${health.last_error}</span>` : ''}
+            </div>
+            <div class="flex gap-1.5">
+              <button onclick="openXianyuConnectionLogs(${a.id})" class="px-2.5 py-1 rounded bg-slate-100 text-slate-700 text-xs">连接日志</button>
+              <button onclick="reconnectXianyuAccount(${a.id})" class="px-2.5 py-1 rounded bg-indigo-50 text-indigo-700 text-xs">重连</button>
+              <button onclick="verifyAccountById(${a.id})" class="px-2.5 py-1 rounded bg-emerald-50 text-emerald-700 text-xs">验签</button>
+              <button onclick="deleteXianyuAccount(${a.id})" class="px-2.5 py-1 rounded bg-rose-50 text-rose-600 text-xs">删除</button>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+
+      await autoSyncAndRenderAccountItems(currentAccountId);
+    }
+
+    async function onSelectAccountInProductsPage(accountId) {
+      if (!accountId) return;
+      currentAccountId = accountId;
+      await autoSyncAndRenderAccountItems(accountId);
+    }
+
+    function setProductStatusFilter(status) {
+      currentProductStatusFilter = status;
+      ['all', 'on_sale', 'off_shelf'].forEach(st => {
+        const btn = document.getElementById(`status-filter-${st}`);
+        if (!btn) return;
+        btn.className = st === status
+          ? 'px-2.5 py-1 rounded-md text-xs font-semibold transition bg-white text-indigo-600 shadow-xs'
+          : 'px-2.5 py-1 rounded-md text-xs font-semibold transition text-slate-600 hover:text-slate-900';
+      });
+      renderXianyuItemsTable();
+    }
+
+    async function autoSyncAndRenderAccountItems(accountId, silent = false) {
+      if (!accountId) return;
+      const hintEl = document.getElementById('sync-status-hint');
+      if (!silent && hintEl) {
+        hintEl.textContent = `正在从闲鱼同步账号 #${accountId} 的在售与下架商品...`;
+      }
+      try {
+        const syncRes = await apiFetch(`/api/xianyu/accounts/${accountId}/items/sync`, { method: 'POST' });
+        currentAccountItems = syncRes.items || [];
+        const statusStr = String(syncRes.remote_status || '');
+        const isExpiredOrErr = statusStr.includes('过期') || statusStr.includes('FAIL_');
+        if (hintEl) {
+          hintEl.textContent = `已同步 (${statusStr}) · 共 ${currentAccountItems.length} 件商品`;
+          hintEl.className = isExpiredOrErr ? 'text-xs text-rose-600 font-semibold' : 'text-xs text-slate-500';
+        }
+        if (!silent && isExpiredOrErr) {
+          showToast(statusStr, true);
+        }
+      } catch (_) {
+        try {
+          currentAccountItems = await apiFetch(`/api/xianyu/accounts/${accountId}/items`);
+          if (hintEl) hintEl.textContent = `共 ${currentAccountItems.length} 件商品`;
+        } catch (err) {
+          currentAccountItems = [];
+          if (hintEl) hintEl.textContent = err.message;
+        }
+      }
+      document.getElementById('badge-xy-items').textContent = currentAccountItems.length;
+      renderXianyuItemsTable();
+    }
+
+    async function manualSyncCurrentAccountItems() {
+      if (!currentAccountId) return showToast('请先选择或添加闲鱼账号', true);
+      await autoSyncAndRenderAccountItems(currentAccountId, false);
+      const onSaleCount = currentAccountItems.filter(i => i.status === 'on_sale').length;
+      const offShelfCount = currentAccountItems.filter(i => i.status !== 'on_sale').length;
+      showToast(`闲鱼商品同步完成：在售 ${onSaleCount} 件，下架 ${offShelfCount} 件`);
+    }
+
+    function renderXianyuItemsTable() {
+      const allCount = currentAccountItems.length;
+      const onSaleCount = currentAccountItems.filter(i => i.status === 'on_sale').length;
+      const offShelfCount = currentAccountItems.filter(i => i.status !== 'on_sale').length;
+
+      document.getElementById('count-status-all').textContent = allCount;
+      document.getElementById('count-status-on_sale').textContent = onSaleCount;
+      document.getElementById('count-status-off_shelf').textContent = offShelfCount;
+
+      const filteredItems = currentAccountItems.filter(item => {
+        if (currentProductStatusFilter === 'on_sale') return item.status === 'on_sale';
+        if (currentProductStatusFilter === 'off_shelf') return item.status !== 'on_sale';
+        return true;
+      });
+
+      const tbody = document.getElementById('xianyu-items-tbody');
+      if (filteredItems.length === 0) {
+        const emptyText = currentAccountItems.length === 0
+          ? '当前闲鱼账号下暂无商品，可点击右上角「+ 添加闲鱼商品」录入'
+          : `当前筛选状态（${currentProductStatusFilter === 'on_sale' ? '在售' : '下架'}）下暂无商品`;
+        tbody.innerHTML = `<tr><td colspan="5" class="py-10 text-center text-slate-400 text-xs">${emptyText}</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filteredItems.map(item => {
+        const yuan = (item.price / 100).toFixed(2);
+        const isNumericId = /^\d+$/.test(String(item.xianyu_item_id || ''));
+        const itemUrl = isNumericId
+          ? `https://www.goofish.com/item?id=${encodeURIComponent(item.xianyu_item_id)}`
+          : null;
+
+        const thumbHtml = item.image_url
+          ? `<img src="${item.image_url}" referrerpolicy="no-referrer" alt="主图" class="w-11 h-11 rounded-lg object-cover border border-slate-200 shrink-0 bg-slate-100" />`
+          : `<div class="w-11 h-11 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-400 text-xs shrink-0">📦</div>`;
+
+        const statusBadge = item.status === 'on_sale'
+          ? `<button onclick="toggleXianyuItemStatus(${item.id})" title="点击切换为下架" class="px-2 py-0.5 rounded bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[11px] font-medium cursor-pointer">🟢 在售</button>`
+          : `<button onclick="toggleXianyuItemStatus(${item.id})" title="点击切换为在售" class="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-600 text-[11px] font-medium cursor-pointer">⚪ 下架</button>`;
+
+        const bindOptions = [
+          `<option value="">-- 未绑定（不自动发货） --</option>`,
+          ...cardProductsCache.map(cp =>
+            `<option value="${cp.id}" ${item.local_product_id === cp.id ? 'selected' : ''}>#${cp.id} ${cp.name}</option>`
+          )
+        ].join('');
+
+        return `
+          <tr class="hover:bg-slate-50/90 transition">
+            <td class="py-3.5 px-5">
+              <div class="flex items-center gap-3">
+                ${itemUrl ? `<a href="${itemUrl}" target="_blank" rel="noopener noreferrer">${thumbHtml}</a>` : thumbHtml}
+                <div class="min-w-0">
+                  <div class="font-semibold text-slate-900 truncate max-w-md">
+                    ${itemUrl
+                      ? `<a href="${itemUrl}" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-600 hover:underline">${item.title}</a>`
+                      : item.title}
+                  </div>
+                  <div class="flex items-center gap-2 text-[11px] text-slate-400 font-mono mt-0.5">
+                    <span>闲鱼宝贝ID: ${item.xianyu_item_id}</span>
+                    ${itemUrl ? `<a href="${itemUrl}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:underline font-sans font-medium">🔗 跳转闲鱼</a>` : ''}
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="py-3.5 px-3">
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs text-slate-400">¥</span>
+                <input id="xy-price-input-${item.id}" type="number" step="0.01" value="${yuan}"
+                  class="w-24 rounded-lg border border-slate-300 px-2 py-1 text-xs font-mono font-bold text-slate-900" />
+                <button onclick="saveInlinePrice(${item.id})"
+                  class="px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold">
+                  改价
+                </button>
+              </div>
+            </td>
+            <td class="py-3.5 px-3 text-xs">
+              <span class="font-mono text-slate-700 mr-1.5">库存 ${item.stock}</span>
+              ${statusBadge}
+            </td>
+            <td class="py-3.5 px-4">
+              <select onchange="bindItemToCardProduct(${item.id}, this.value)"
+                class="w-full max-w-[230px] rounded-lg border ${item.local_product_id ? 'border-indigo-400 bg-indigo-50/40 text-indigo-900 font-semibold' : 'border-slate-300 text-slate-600'} px-2.5 py-1.5 text-xs">
+                ${bindOptions}
+              </select>
+            </td>
+            <td class="py-3.5 px-5 text-right space-x-1.5">
+              <button onclick="openXianyuItemModal(${item.id})"
+                class="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-medium">
+                修改
+              </button>
+              <button onclick="deleteXianyuItem(${item.id})"
+                class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-medium">
+                删除
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function toggleXianyuItemStatus(itemId) {
+      const item = currentAccountItems.find(i => i.id === itemId);
+      if (!item) return;
+      const nextStatus = item.status === 'on_sale' ? 'off_shelf' : 'on_sale';
+      try {
+        const res = await apiFetch(`/api/xianyu/items/${itemId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            xianyu_item_id: item.xianyu_item_id,
+            title: item.title,
+            price: item.price,
+            original_price: item.original_price,
+            stock: item.stock,
+            status: nextStatus,
+            category: item.category,
+            description: item.description,
+            image_url: item.image_url,
+            local_product_id: item.local_product_id
+          })
+        });
+        item.status = res.status || item.status;
+        if (res.xianyu_item_id) {
+          item.xianyu_item_id = res.xianyu_item_id;
+        }
+        renderXianyuItemsTable();
+        if (res.remote_attempted && !res.remote_synced) {
+          showToast(res.remote_message, true);
+        } else {
+          showToast(res.remote_message || `商品状态已切换为：${item.status === 'on_sale' ? '在售' : '已下架'}`);
+        }
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    async function saveInlinePrice(itemId) {
+      const val = parseFloat(document.getElementById(`xy-price-input-${itemId}`).value);
+      if (isNaN(val) || val < 0) return showToast('请输入有效金额', true);
+      try {
+        const res = await apiFetch(`/api/xianyu/items/${itemId}/price`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ price: Math.round(val * 100) })
+        });
+        const item = currentAccountItems.find(i => i.id === itemId);
+        if (item && typeof res.price === 'number') {
+          item.price = res.price;
+        }
+        renderXianyuItemsTable();
+        if (res.remote_attempted && !res.remote_synced) {
+          showToast(res.remote_message, true);
+        } else {
+          showToast(res.remote_message || `金额已修改为 ¥${val.toFixed(2)}`);
+        }
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    async function bindItemToCardProduct(itemId, cardProductIdStr) {
+      const local_product_id = cardProductIdStr ? Number(cardProductIdStr) : null;
+      try {
+        await apiFetch(`/api/xianyu/items/${itemId}/bind`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ local_product_id })
+        });
+        showToast(local_product_id ? `已绑定卡密商品 #${local_product_id}，支持自动发货` : '已解绑自动发货卡密商品');
+        await loadCardProducts();
+        await autoSyncAndRenderAccountItems(currentAccountId);
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    function openXianyuItemModal(itemId = null) {
+      if (!currentAccountId) return showToast('请先选择或添加闲鱼账号', true);
+      const bindSelect = document.getElementById('xyi-bind-product');
+      bindSelect.innerHTML = `<option value="">-- 不绑定 --</option>` + cardProductsCache.map(cp =>
+        `<option value="${cp.id}">#${cp.id} ${cp.name}</option>`
+      ).join('');
+
+      if (itemId) {
+        const item = currentAccountItems.find(i => i.id === itemId);
+        if (!item) return;
+        document.getElementById('xy-item-modal-title').textContent = `修改闲鱼商品 #${item.id}`;
+        document.getElementById('xyi-db-id').value = String(item.id);
+        document.getElementById('xyi-title').value = item.title;
+        document.getElementById('xyi-price-yuan').value = (item.price / 100).toFixed(2);
+        document.getElementById('xyi-stock').value = item.stock;
+        document.getElementById('xyi-id').value = item.xianyu_item_id;
+        document.getElementById('xyi-status').value = item.status || 'on_sale';
+        document.getElementById('xyi-desc').value = item.description || '';
+        bindSelect.value = item.local_product_id ? String(item.local_product_id) : '';
+      } else {
+        document.getElementById('xy-item-modal-title').textContent = '添加闲鱼商品';
+        document.getElementById('xyi-db-id').value = '';
+        document.getElementById('xyi-title').value = '';
+        document.getElementById('xyi-price-yuan').value = '19.90';
+        document.getElementById('xyi-stock').value = '10';
+        document.getElementById('xyi-id').value = '';
+        document.getElementById('xyi-status').value = 'on_sale';
+        document.getElementById('xyi-desc').value = '';
+        bindSelect.value = '';
+      }
+      document.getElementById('xy-item-modal').classList.remove('hidden');
+    }
+
+    function closeXianyuItemModal() {
+      document.getElementById('xy-item-modal').classList.add('hidden');
+    }
+
+    async function saveXianyuItem() {
+      const dbId = document.getElementById('xyi-db-id').value;
+      const title = document.getElementById('xyi-title').value.trim();
+      const priceYuan = parseFloat(document.getElementById('xyi-price-yuan').value || '0');
+      const stock = parseInt(document.getElementById('xyi-stock').value || '1', 10);
+      const xianyu_item_id = document.getElementById('xyi-id').value.trim() || null;
+      const status = document.getElementById('xyi-status').value;
+      const description = document.getElementById('xyi-desc').value.trim() || null;
+      const bindVal = document.getElementById('xyi-bind-product').value;
+      const local_product_id = bindVal ? Number(bindVal) : null;
+
+      if (!title) return showToast('请输入闲鱼商品标题', true);
+
+      const payload = {
+        xianyu_item_id,
+        title,
+        price: Math.round(priceYuan * 100),
+        stock,
+        status,
+        description,
+        local_product_id
+      };
+
+      try {
+        let res = null;
+        if (dbId) {
+          res = await apiFetch(`/api/xianyu/items/${dbId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (res.remote_attempted && !res.remote_synced) {
+            showToast(res.remote_message, true);
+          } else {
+            showToast(res.remote_message || '闲鱼商品已更新');
+          }
+        } else {
+          await apiFetch(`/api/xianyu/accounts/${currentAccountId}/items`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          showToast('闲鱼商品已添加');
+        }
+        closeXianyuItemModal();
+        await loadCardProducts();
+        const items = await apiFetch(`/api/xianyu/accounts/${currentAccountId}/items`);
+        currentAccountItems = items || [];
+        renderXianyuItemsTable();
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    async function deleteXianyuItem(itemId) {
+      try {
+        await apiFetch(`/api/xianyu/items/${itemId}`, { method: 'DELETE' });
+        showToast('闲鱼商品已删除');
+        await autoSyncAndRenderAccountItems(currentAccountId);
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    // ==================== 2. 🔑 卡密库存中心（创建、修改、删除卡密商品 + 兑换码管理） ====================
+    async function loadCardProducts() {
+      try {
+        const [products, stats] = await Promise.all([
+          apiFetch('/api/products'),
+          apiFetch('/api/products/stats').catch(() => null)
+        ]);
+        cardProductsCache = products;
+        if (stats) {
+          document.getElementById('prod-stat-total').textContent = stats.total;
+          document.getElementById('prod-stat-codes').textContent = stats.total_codes;
+          document.getElementById('prod-stat-unused').textContent = stats.unused_codes;
+          document.getElementById('prod-stat-low').textContent = stats.low_stock_count;
+        }
+      } catch (e) {
+        showToast(e.message, true);
+        return;
+      }
+
+      document.getElementById('badge-products').textContent = cardProductsCache.length;
+      const consignSelect = document.getElementById('manual-consign-product-id');
+      if (consignSelect) {
+        consignSelect.innerHTML = `<option value="">-- 按闲鱼宝贝ID自动匹配 --</option>` + cardProductsCache.map(cp =>
+          `<option value="${cp.id}">#${cp.id} ${cp.name}</option>`
+        ).join('');
+      }
+      const tbody = document.getElementById('card-products-tbody');
+
+      if (cardProductsCache.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="py-8 text-center text-slate-400 text-xs">暂无卡密商品，请点击右上角「+ 创建卡密商品」</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = cardProductsCache.map(p => {
+        const yuan = (p.price / 100).toFixed(2);
+        const bindBadge = p.xianyu_item_id
+          ? `<span class="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 font-mono text-[11px]">${p.xianyu_item_id}</span>`
+          : `<span class="text-slate-400 text-xs">未绑定</span>`;
+        return `
+          <tr class="hover:bg-slate-50/90 transition ${currentCardProductId === p.id ? 'bg-indigo-50/40' : ''}">
+            <td class="py-3 px-4">
+              <div class="font-semibold text-slate-900">#${p.id} ${p.name}</div>
+              <div class="text-[11px] text-slate-400">${p.description || ''}</div>
+            </td>
+            <td class="py-3 px-3 font-mono font-bold text-slate-900">¥${yuan}</td>
+            <td class="py-3 px-3">${bindBadge}</td>
+            <td class="py-3 px-4 text-right space-x-1">
+              <button onclick="selectCardProductForInventory(${p.id})"
+                class="px-2.5 py-1 rounded bg-slate-900 text-white text-xs">管理卡密</button>
+              <button onclick="openCardProductModal(${p.id})"
+                class="px-2 py-1 rounded bg-slate-100 text-slate-700 text-xs">修改</button>
+              <button onclick="deleteCardProduct(${p.id})"
+                class="px-2 py-1 rounded bg-rose-50 text-rose-600 text-xs">删除</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      if (!currentCardProductId && cardProductsCache.length > 0) {
+        await selectCardProductForInventory(cardProductsCache[0].id);
+      } else if (currentCardProductId) {
+        await selectCardProductForInventory(currentCardProductId);
+      }
+    }
+
+    async function selectCardProductForInventory(productId) {
+      currentCardProductId = productId;
+      const prod = cardProductsCache.find(p => p.id === productId);
+      if (!prod) return;
+
+      document.getElementById('selected-card-prod-label').textContent = `— #${prod.id} ${prod.name}`;
+
+      const [stock, tpl, codes] = await Promise.all([
+        apiFetch(`/api/products/${productId}/stock`),
+        apiFetch(`/api/products/${productId}/template`),
+        apiFetch(`/api/products/${productId}/codes`)
+      ]);
+
+      document.getElementById('inv-unused').textContent = stock.unused;
+      document.getElementById('inv-sold').textContent = stock.sold;
+      document.getElementById('inv-total').textContent = stock.total;
+      document.getElementById('selected-template-info').textContent =
+        `发货模式: ${tpl.template_type} ${tpl.content ? '· 附加内容: ' + tpl.content : ''}`;
+
+      const listEl = document.getElementById('codes-list');
+      if (!codes || codes.length === 0) {
+        listEl.innerHTML = '<div class="p-4 text-center text-slate-400">当前卡密商品暂无兑换码库存，请在上方批量导入</div>';
+      } else {
+        listEl.innerHTML = codes.map(c => `
+          <div class="px-3.5 py-2 flex items-center justify-between hover:bg-slate-50">
+            <span class="font-mono font-medium text-slate-800">${c.code}</span>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded text-[11px] ${c.status === 'unused' ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'}">${c.status}</span>
+              <button onclick="deleteSingleCode(${c.id})" class="text-rose-500 hover:underline">删除</button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function openCardProductModal(productId = null) {
+      if (productId) {
+        const p = cardProductsCache.find(x => x.id === productId);
+        if (!p) return;
+        document.getElementById('product-modal-title').textContent = `修改卡密商品 #${p.id}`;
+        document.getElementById('pm-id').value = String(p.id);
+        document.getElementById('pm-name').value = p.name;
+        document.getElementById('pm-price-yuan').value = (p.price / 100).toFixed(2);
+        document.getElementById('pm-enabled').value = p.enabled ? 'true' : 'false';
+        document.getElementById('pm-desc').value = p.description || '';
+      } else {
+        document.getElementById('product-modal-title').textContent = '创建卡密商品';
+        document.getElementById('pm-id').value = '';
+        document.getElementById('pm-name').value = '';
+        document.getElementById('pm-price-yuan').value = '50.00';
+        document.getElementById('pm-enabled').value = 'true';
+        document.getElementById('pm-desc').value = '';
+        document.getElementById('pm-tpl-content').value = '';
+      }
+      document.getElementById('product-modal').classList.remove('hidden');
+    }
+
+    function closeCardProductModal() {
+      document.getElementById('product-modal').classList.add('hidden');
+    }
+
+    async function saveCardProduct() {
+      const id = document.getElementById('pm-id').value;
+      const name = document.getElementById('pm-name').value.trim();
+      const priceYuan = parseFloat(document.getElementById('pm-price-yuan').value || '0');
+      const enabled = document.getElementById('pm-enabled').value === 'true';
+      const template_type = document.getElementById('pm-tpl-type').value;
+      const template_content = document.getElementById('pm-tpl-content').value.trim() || null;
+      const description = document.getElementById('pm-desc').value.trim() || null;
+
+      if (!name) return showToast('请输入卡密商品名称', true);
+
+      const existing = id ? cardProductsCache.find(x => x.id === Number(id)) : null;
+      const payload = {
+        name,
+        price: Math.round(priceYuan * 100),
+        description,
+        xianyu_item_id: existing ? existing.xianyu_item_id : null,
+        enabled,
+        template_type,
+        template_content
+      };
+
+      try {
+        if (id) {
+          await apiFetch(`/api/products/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          showToast('卡密商品已更新');
+        } else {
+          await apiFetch('/api/products', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          showToast('卡密商品已创建');
+        }
+        closeCardProductModal();
+        await loadCardProducts();
+        renderXianyuItemsTable();
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    async function deleteCardProduct(id) {
+      try {
+        await apiFetch(`/api/products/${id}`, { method: 'DELETE' });
+        if (currentCardProductId === id) currentCardProductId = null;
+        showToast(`卡密商品 #${id} 已删除`);
+        await loadCardProducts();
+        await autoSyncAndRenderAccountItems(currentAccountId);
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    async function importCodes() {
+      if (!currentCardProductId) return showToast('请先在左侧选择一个卡密商品', true);
+      const raw = document.getElementById('import-codes-input').value;
+      const codes = raw.split('\n').map(s => s.trim()).filter(Boolean);
+      if (codes.length === 0) return showToast('请输入至少一条兑换码', true);
+
+      try {
+        const data = await apiFetch(`/api/products/${currentCardProductId}/codes`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ codes })
+        });
+        document.getElementById('import-codes-input').value = '';
+        showToast(`成功导入 ${data.imported_count} 条卡密`);
+        await selectCardProductForInventory(currentCardProductId);
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    async function deleteSingleCode(codeId) {
+      try {
+        await apiFetch(`/api/codes/id/${codeId}`, { method: 'DELETE' });
+        await selectCardProductForInventory(currentCardProductId);
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    async function lookupSingleCode() {
+      const code = document.getElementById('search-code-input').value.trim();
+      if (!code) return;
+      try {
+        const data = await apiFetch(`/api/codes/${encodeURIComponent(code)}`);
+        showToast(`卡密 [${data.code}] 属于卡密商品 #${data.product_id}，状态: ${data.status}`);
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    // ==================== 3. 📊 闲鱼搜索与性价比指数分析（展示商品主图 + 链接跳转） ====================
+    async function runXianyuMarketSearch() {
+      const keyword = document.getElementById('mkt-keyword').value.trim();
+      if (!keyword) return showToast('请输入要搜索的闲鱼物品关键词', true);
+
+      const minVal = document.getElementById('mkt-min-price').value;
+      const maxVal = document.getElementById('mkt-max-price').value;
+      const sort_by = document.getElementById('mkt-sort').value;
+
+      const payload = {
+        keyword,
+        account_id: currentAccountId,
+        min_price_yuan: minVal ? parseFloat(minVal) : null,
+        max_price_yuan: maxVal ? parseFloat(maxVal) : null,
+        sort_by
+      };
+
+      document.getElementById('mkt-source-label').textContent = '正在向闲鱼 h5api.m.goofish.com 请求实时数据...';
+      try {
+        const data = await apiFetch('/api/xianyu/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const st = data.stats;
+        document.getElementById('mkt-stat-median').textContent = `¥${st.median_price_yuan.toFixed(2)}`;
+        document.getElementById('mkt-stat-avg').textContent = `¥${st.avg_price_yuan.toFixed(2)}`;
+        document.getElementById('mkt-stat-min').textContent = `¥${st.min_price_yuan.toFixed(2)}`;
+        document.getElementById('mkt-stat-max').textContent = `¥${st.max_price_yuan.toFixed(2)}`;
+        document.getElementById('mkt-stat-quartiles').textContent = `¥${st.p25_price_yuan.toFixed(2)} ~ ¥${st.p75_price_yuan.toFixed(2)}`;
+        document.getElementById('mkt-stat-suggest').textContent = st.suggested_listing_range;
+        document.getElementById('mkt-source-label').textContent =
+          `${data.data_source} · 共 ${st.sample_count} 件真实商品 · sign=${data.computed_sign.slice(0, 10)}...`;
+
+        const tbody = document.getElementById('market-items-tbody');
+        tbody.innerHTML = data.items.map(item => {
+          const diffSign = item.diff_from_median_pct > 0 ? '+' : '';
+          const diffColor = item.diff_from_median_pct <= 0 ? 'text-emerald-600 font-semibold' : 'text-rose-600';
+          const itemUrl = item.item_url || `https://www.goofish.com/item?id=${encodeURIComponent(item.item_id)}`;
+          const imgHtml = item.image_url
+            ? `<a href="${itemUrl}" target="_blank" rel="noopener noreferrer" class="shrink-0 block">
+                 <img src="${item.image_url}" referrerpolicy="no-referrer" loading="lazy" alt="${item.title}"
+                   class="w-14 h-14 rounded-lg object-cover border border-slate-200 hover:scale-105 transition bg-slate-100" />
+               </a>`
+            : `<a href="${itemUrl}" target="_blank" rel="noopener noreferrer"
+                 class="w-14 h-14 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-400 text-xs shrink-0">🐟</a>`;
+
+          return `
+            <tr class="hover:bg-slate-50/90 transition">
+              <td class="py-3.5 px-5">
+                <div class="flex items-center gap-3.5">
+                  ${imgHtml}
+                  <div class="min-w-0">
+                    <a href="${itemUrl}" target="_blank" rel="noopener noreferrer"
+                      class="font-semibold text-slate-900 hover:text-indigo-600 hover:underline line-clamp-2 leading-snug">
+                      ${item.title}
+                    </a>
+                    <div class="flex flex-wrap items-center gap-2 text-[11px] text-slate-400 font-mono mt-1">
+                      <span>ID: ${item.item_id}</span>
+                      <span>· ${item.condition_tag}</span>
+                      <a href="${itemUrl}" target="_blank" rel="noopener noreferrer"
+                        class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-sans font-semibold transition">
+                        🔗 跳转闲鱼 ↗
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3.5 px-3 font-mono font-bold text-slate-900 whitespace-nowrap">¥${item.price_yuan.toFixed(2)}</td>
+              <td class="py-3.5 px-3 font-mono text-xs whitespace-nowrap ${diffColor}">${diffSign}${item.diff_from_median_pct.toFixed(1)}%</td>
+              <td class="py-3.5 px-3 text-xs">
+                <div class="font-medium text-slate-800">${item.seller_nick} (${item.location})</div>
+                <div class="text-[11px] text-slate-500">${item.seller_credit} · ${item.want_count}人想要</div>
+              </td>
+              <td class="py-3.5 px-4 font-mono font-bold text-indigo-600">${item.value_score.toFixed(1)}</td>
+              <td class="py-3.5 px-5 text-xs">
+                <div class="font-bold text-slate-900">${item.value_grade}</div>
+                <div class="text-[11px] text-slate-500">${item.recommendation}</div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (e) {
+        document.getElementById('mkt-source-label').textContent = '搜索失败';
+        showToast(e.message, true);
+      }
+    }
+
+    // ==================== 4. 闲鱼多账号扫码与登录管理 ====================
+    function setXianyuMode(mode) {
+      ['qrcode', 'cookie', 'open_api'].forEach(m => {
+        const formId = m === 'open_api' ? 'xy-form-openapi' : `xy-form-${m}`;
+        const btnId = m === 'open_api' ? 'mode-btn-openapi' : `mode-btn-${m}`;
+        document.getElementById(formId).classList.toggle('hidden', m !== mode);
+        document.getElementById(btnId).className = m === mode
+          ? 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white'
+          : 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700';
+      });
+    }
+
+    async function startXianyuQrLogin() {
+      if (qrPollTimer) clearInterval(qrPollTimer);
+      try {
+        const data = await apiFetch('/api/xianyu/qrcode/generate', { method: 'POST' });
+        currentQrSession = data;
+        const qrImg = document.getElementById('xy-qr-img');
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=6&data=${encodeURIComponent(data.code_content)}`;
+        qrImg.classList.remove('hidden');
+        document.getElementById('xy-qr-placeholder').classList.add('hidden');
+        document.getElementById('xy-qr-status-desc').textContent = data.message;
+        qrPollTimer = setInterval(pollXianyuQrStatus, 2500);
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    async function pollXianyuQrStatus() {
+      if (!currentQrSession) return;
+      try {
+        const data = await apiFetch('/api/xianyu/qrcode/poll', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            t: currentQrSession.t,
+            ck: currentQrSession.ck,
+            session_cookies: currentQrSession.session_cookies
+          })
+        });
+        document.getElementById('xy-qr-status-desc').textContent = data.message;
+        if (data.qr_status === 'CONFIRMED') {
+          clearInterval(qrPollTimer);
+          showToast(data.message);
+          await loadXianyuAccountsAndAutoSync();
+        } else if (data.qr_status === 'EXPIRED') {
+          clearInterval(qrPollTimer);
+        }
+      } catch (_) {}
+    }
+
+    async function submitXianyuLogin(mode) {
+      const payload = mode === 'cookie'
+        ? {
+            auth_mode: 'cookie',
+            seller_nick: document.getElementById('xy-cookie-nick').value.trim() || null,
+            raw_cookie: document.getElementById('xy-cookie-raw').value.trim()
+          }
+        : {
+            auth_mode: 'open_api',
+            seller_nick: document.getElementById('xy-oa-nick').value.trim() || null,
+            app_key: document.getElementById('xy-oa-appkey').value.trim(),
+            app_secret: document.getElementById('xy-oa-secret').value.trim(),
+            access_token: document.getElementById('xy-oa-token').value.trim() || null
+          };
+
+      try {
+        await apiFetch('/api/xianyu/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        showToast('闲鱼账号绑定成功');
+        await loadXianyuAccountsAndAutoSync();
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    async function verifyAccountById(id) {
+      try {
+        const data = await apiFetch(`/api/xianyu/accounts/${id}/verify`, { method: 'POST' });
+        showToast(`账号 #${id} ${data.message}: ${data.remote_response_preview}`, !data.valid);
+        await loadXianyuAccountsAndAutoSync();
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    async function deleteXianyuAccount(id) {
+      try {
+        await apiFetch(`/api/xianyu/accounts/${id}`, { method: 'DELETE' });
+        if (currentAccountId === id) currentAccountId = null;
+        showToast(`闲鱼账号 #${id} 已删除`);
+        await loadXianyuAccountsAndAutoSync();
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    async function reconnectXianyuAccount(id) {
+      try {
+        showToast(`正在重连账号 #${id}...`);
+        const res = await apiFetch(`/api/xianyu/accounts/${id}/reconnect`, { method: 'POST' });
+        showToast(res.message || (res.valid ? '重连成功' : '重连失败'), !res.valid);
+        await loadXianyuAccountsAndAutoSync();
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    async function openXianyuConnectionLogs(id) {
+      let logs = [];
+      try {
+        logs = await apiFetch(`/api/xianyu/accounts/${id}/connection-logs?limit=50`);
+      } catch (e) {
+        return showToast(e.message, true);
+      }
+      document.getElementById('xy-logs-modal')?.remove();
+      const modal = document.createElement('div');
+      modal.id = 'xy-logs-modal';
+      modal.className = 'fixed inset-0 bg-slate-900/50 z-50 flex items-center justify-center p-4';
+      const rows = (logs || []).map(l => {
+        const color = l.status === 'success' ? 'text-emerald-600' : l.status === 'failed' ? 'text-rose-600' : 'text-slate-500';
+        return `<div class="flex items-start gap-3 py-2 border-b border-slate-100 text-xs">
+          <span class="font-mono text-slate-400 shrink-0">${String(l.created_at || '').replace('T', ' ').slice(0, 19)}</span>
+          <span class="font-semibold ${color} shrink-0">${l.event} / ${l.status}</span>
+          <span class="text-slate-600 break-all">${l.message || '-'}</span>
+        </div>`;
+      }).join('');
+      modal.innerHTML = `
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-2xl w-full p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <h3 class="text-base font-bold text-slate-900">闲鱼账号 #${id} 连接日志</h3>
+            <button onclick="document.getElementById('xy-logs-modal').remove()" class="text-slate-400">✕</button>
+          </div>
+          <div class="max-h-[60vh] overflow-y-auto">${rows || '<div class="py-8 text-center text-xs text-slate-400">暂无连接日志</div>'}</div>
+        </div>`;
+      document.body.appendChild(modal);
+    }
+
+    // ==================== 5. 闲鱼远端订单扫描、虚拟免拼发货与订单流水 ====================
+    async function runAutoDeliverScan() {
+      const bannerEl = document.getElementById('auto-deliver-scan-banner');
+      showToast('正在同步闲鱼 IM 会话列表 (mtop.taobao.idlemessage.pc.session.sync/3.0/) 扫描待发货订单...');
+      try {
+        const res = await apiFetch('/api/xianyu/auto-deliver/scan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ account_id: currentAccountId || null })
+        });
+        if (bannerEl) {
+          bannerEl.classList.remove('hidden');
+          const accDetails = (res.accounts || []).map(a =>
+            `<div>账号 #${a.account_id} (${decodeNick(a.seller_nick) || '-'}) · IM令牌: <span class="font-mono">${a.im_token_ret}</span> · 会话同步: <span class="font-mono">${a.session_sync_ret}</span> · 扫描会话 ${a.total_sessions_scanned} 个 · 待发货 ${a.detected_paid_orders.length} 笔</div>`
+          ).join('');
+          bannerEl.innerHTML = `<div class="font-bold text-indigo-900">${res.message}</div>${accDetails}`;
+        }
+        showToast(res.message);
+        await loadOrders();
+        await loadCardProducts();
+        if (currentAccountId) {
+          await autoSyncAndRenderAccountItems(currentAccountId, true);
+        }
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    async function submitManualConsignDeliver() {
+      const orderId = document.getElementById('manual-consign-order-id').value.trim();
+      const itemId = document.getElementById('manual-consign-item-id').value.trim() || null;
+      const prodVal = document.getElementById('manual-consign-product-id').value;
+      const productId = prodVal ? Number(prodVal) : null;
+
+      if (!orderId) return showToast('请输入闲鱼订单号 (orderId)', true);
+      if (!itemId && !productId) return showToast('请填写闲鱼宝贝 ID 或选择卡密商品', true);
+
+      try {
+        const res = await apiFetch('/api/xianyu/orders/consign', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            platform_order_id: orderId,
+            xianyu_item_id: itemId,
+            product_id: productId,
+            account_id: currentAccountId || null
+          })
+        });
+
+        const consignMsg = res.remote_consign ? res.remote_consign.message : '已完成本地卡密分配';
+        const imMsg = res.remote_im_send ? res.remote_im_send.message : '';
+        const bannerEl = document.getElementById('auto-deliver-scan-banner');
+        if (bannerEl) {
+          bannerEl.classList.remove('hidden');
+          bannerEl.innerHTML = `
+            <div class="font-bold text-emerald-800">✅ 订单 ${orderId} 发货执行结果</div>
+            <div>📦 远端虚拟发货: ${consignMsg}</div>
+            <div>💬 远端私信状态: ${imMsg}</div>
+            <div class="mt-1 p-2 rounded bg-white border border-slate-200 font-mono text-indigo-700">${res.auto_reply_message}</div>
+          `;
+        }
+        showToast(`${consignMsg} · 发货内容: ${res.order.delivery_content}`);
+        await loadOrders();
+        await loadCardProducts();
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    let currentOrders = [];
+    let orderSyncInFlight = null;
+    let lastOrderSyncAt = 0;
+
+    // 只触发同步请求，不负责重新渲染；供页面加载与手动按钮共用，避免重复请求。
+    async function requestOrderSync(force = false) {
+      if (!force && Date.now() - lastOrderSyncAt < 30000) return null;
+      if (!orderSyncInFlight) {
+        orderSyncInFlight = apiFetch('/api/orders/sync', { method: 'POST' })
+          .then(res => { lastOrderSyncAt = Date.now(); return res; })
+          .finally(() => { orderSyncInFlight = null; });
+      }
+      return orderSyncInFlight;
+    }
+
+    async function syncXianyuOrders() {
+      try {
+        const res = await requestOrderSync(true);
+        if (res && res.message) showToast(res.message, !!(res.errors && res.errors.length));
+        await loadOrders(true);
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    async function loadOrders(skipSync = false) {
+      // 首次进入/刷新订单页时静默拉取闲鱼卖家订单列表；失败不影响本地订单展示
+      if (!skipSync) {
+        try { await requestOrderSync(); } catch (_) {}
+      }
+      try {
+        const [orders, stats] = await Promise.all([
+          apiFetch('/api/orders'),
+          apiFetch('/api/orders/stats').catch(() => null)
+        ]);
+        currentOrders = orders || [];
+        document.getElementById('badge-orders').textContent = currentOrders.length;
+        if (stats) {
+          document.getElementById('order-stat-total').textContent = stats.total;
+          document.getElementById('order-stat-pending').textContent = stats.pending;
+          document.getElementById('order-stat-delivered').textContent = stats.delivered;
+          document.getElementById('order-stat-failed').textContent = stats.failed;
+          document.getElementById('order-stat-revenue').textContent = `¥${(stats.revenue / 100).toFixed(2)}`;
+        }
+        renderOrdersTable();
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    function setOrderStatusFilter(value) {
+      const select = document.getElementById('order-filter-status');
+      if (select && select.value !== value) select.value = value;
+      renderOrdersTable();
+    }
+
+    function orderStatusBadge(order) {
+      const status = order.order_status || 'delivered';
+      const map = {
+        delivered: ['已发货', 'bg-emerald-50 text-emerald-700'],
+        pending: ['待发货', 'bg-amber-50 text-amber-700'],
+        paid: ['已付款', 'bg-sky-50 text-sky-700'],
+        delivering: ['发货中', 'bg-indigo-50 text-indigo-700'],
+        failed: ['发货失败', 'bg-rose-50 text-rose-700'],
+        refunded: ['已退款', 'bg-slate-100 text-slate-600'],
+        closed: ['已关闭', 'bg-slate-100 text-slate-500']
+      };
+      const [label, cls] = map[status] || [status, 'bg-slate-100 text-slate-600'];
+      return `<span class="px-2 py-0.5 rounded ${cls} text-[11px] font-semibold">${label}</span>`;
+    }
+
+    // SQLite CURRENT_TIMESTAMP 存的是 UTC；订单页按浏览器本地时区展示，避免看起来早 8 小时。
+    function formatLocalDateTime(value) {
+      if (!value) return '-';
+      let text = String(value).trim();
+      if (!text) return '-';
+      if (!/[zZ]|[+-]\d{2}:?\d{2}$/.test(text)) {
+        text = text.replace(' ', 'T') + 'Z';
+      }
+      const date = new Date(text);
+      if (Number.isNaN(date.getTime())) return String(value).replace('T', ' ').slice(0, 19);
+      const pad = n => String(n).padStart(2, '0');
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} `
+        + `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+    }
+
+    function renderOrdersTable() {
+      const tbody = document.getElementById('orders-tbody');
+      if (!tbody) return;
+      const filter = document.getElementById('order-filter-status')?.value || 'all';
+      const keyword = (document.getElementById('order-search')?.value || '').trim().toLowerCase();
+      const filtered = currentOrders.filter(o => {
+        if (filter !== 'all' && (o.order_status || 'delivered') !== filter) return false;
+        if (!keyword) return true;
+        return [o.id, o.platform_order_id, o.buyer_nickname, o.buyer_id, o.product_name, o.delivery_content]
+          .filter(Boolean).join(' ').toLowerCase().includes(keyword);
+      });
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" class="py-10 text-center text-slate-400 text-xs">暂无符合条件的订单记录</td></tr>';
+        return;
+      }
+      tbody.innerHTML = filtered.map(o => {
+        const content = String(o.delivery_content || '');
+        const shortContent = content.length > 24 ? `${content.slice(0, 24)}…` : content;
+        const canRemote = o.platform === 'xianyu' && o.platform_order_id;
+        return `
+          <tr class="hover:bg-slate-50/80">
+            <td class="py-3 px-5 font-mono font-semibold">#${o.id}</td>
+            <td class="py-3 px-3 text-xs font-mono">${o.platform} · ${o.platform_order_id || '-'}</td>
+            <td class="py-3 px-3 text-xs">${o.buyer_nickname || o.buyer_id || '-'}</td>
+            <td class="py-3 px-3 font-medium">${o.product_name}</td>
+            <td class="py-3 px-3">${orderStatusBadge(o)}</td>
+            <td class="py-3 px-3 font-mono font-bold text-slate-900">¥${((o.amount || 0) / 100).toFixed(2)}</td>
+            <td class="py-3 px-4 font-mono text-xs text-indigo-700">
+              <button onclick="copyOrderContent(${o.id})" title="点击复制完整发货内容" class="hover:underline text-left">${shortContent || '-'}</button>
+            </td>
+            <td class="py-3 px-3 text-xs text-slate-400 font-mono">${formatLocalDateTime(o.created_at)}</td>
+            <td class="py-3 px-4 text-right space-x-1 whitespace-nowrap">
+              ${canRemote ? `<button onclick="retryOrder(${o.id})" class="px-2 py-1 rounded bg-emerald-50 text-emerald-700 text-[11px]">${o.order_status === 'pending' ? '发货' : '重试'}</button>` : ''}
+              <button onclick="resendOrder(${o.id})" class="px-2 py-1 rounded bg-indigo-50 text-indigo-700 text-[11px]">补发</button>
+              <button onclick="deleteOrder(${o.id})" class="px-2 py-1 rounded bg-rose-50 text-rose-600 text-[11px]">删除</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function copyOrderContent(id) {
+      const order = currentOrders.find(o => o.id === id);
+      if (!order) return;
+      try {
+        await navigator.clipboard.writeText(order.delivery_content || '');
+        showToast('发货内容已复制到剪贴板');
+      } catch (_) {
+        showToast(order.delivery_content || '', false);
+      }
+    }
+
+    async function retryOrder(id) {
+      const order = currentOrders.find(o => o.id === id);
+      const action = order && order.order_status === 'pending' ? '执行' : '重新执行';
+      if (!confirm(`确定${action}订单 #${id} 的闲鱼虚拟发货与卡密发送吗？`)) return;
+      try {
+        const res = await apiFetch(`/api/orders/${id}/retry`, { method: 'POST' });
+        showToast(res.message || '发货完成');
+        await loadOrders(true);
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    async function resendOrder(id) {
+      try {
+        const res = await apiFetch(`/api/orders/${id}/resend`, { method: 'POST' });
+        showToast(res.message || '已提交补发');
+        await loadOrders();
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    async function deleteOrder(id) {
+      if (!confirm(`确定删除订单 #${id} 吗？发货记录会保留用于审计。`)) return;
+      try {
+        await apiFetch(`/api/orders/${id}`, { method: 'DELETE' });
+        showToast(`订单 #${id} 已删除`);
+        await loadOrders();
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    async function checkAdminSession() {
+      try {
+        const data = await apiFetch('/api/auth/me');
+        document.getElementById('admin-user-label').textContent =
+          data.authenticated ? `管理员: ${data.display_name || data.username}` : '管理员: 未登录';
+      } catch (_) {
+        localStorage.removeItem('adm_token');
+        document.getElementById('admin-user-label').textContent = '管理员: 未登录';
+      }
+    }
+
+    function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); }
+    function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); }
+
+    async function submitAdminLogin() {
+      try {
+        const data = await apiFetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: document.getElementById('adm-user').value.trim(),
+            password: document.getElementById('adm-pass').value
+          })
+        });
+        if (data.token) localStorage.setItem('adm_token', data.token);
+        closeLoginModal();
+        await checkAdminSession();
+        showToast(`管理员 ${data.display_name || data.username || ''} 登录成功`);
+        // 登录成功后立即重新加载当前页面，避免 Module 页面停留在登录引导卡片
+        if (typeof window.pageLoaders?.[currentTab] === 'function') {
+          await window.pageLoaders[currentTab]();
+        }
+      } catch (e) {
+        showToast(e.message, true);
+      }
+    }
+
+    async function refreshAll() {
+      await checkAdminSession();
+      await loadCardProducts();
+      await loadXianyuAccountsAndAutoSync();
+      await loadOrders();
+    }
+
+    // 切换到「订单管理」时也刷新一次，并静默同步闲鱼待发货订单
+    window.pageLoaders = window.pageLoaders || {};
+    window.pageLoaders['orders'] = () => loadOrders();
+
+    // 每 15 秒静默与闲鱼远端同步一次当前选中账号的商品（新上架自动显示、闲鱼端下架自动变更为 ⚪ 下架）
+    setInterval(() => {
+      const productsView = document.getElementById('view-products');
+      const itemModal = document.getElementById('xy-item-modal');
+      const activeEl = document.activeElement;
+      const isEditingInput = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT');
+      if (
+        currentAccountId &&
+        productsView &&
+        !productsView.classList.contains('hidden') &&
+        (!itemModal || itemModal.classList.contains('hidden')) &&
+        !isEditingInput
+      ) {
+        autoSyncAndRenderAccountItems(currentAccountId, true);
+      }
+    }, 15000);
+
+    refreshAll();
+  </script>
+</body>
+</html>

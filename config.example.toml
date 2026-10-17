@@ -11,6 +11,20 @@ url = "sqlite:./data/auto-delivery.db"
 host = "127.0.0.1"
 port = 8080
 
+# 管理后台管理员登录配置
+[auth]
+admin_username = "admin"
+admin_password = "admin123"
+session_token = "ad_admin_session_2026_token"
+
 # 日志级别: trace, debug, info, warn, error
 [logging]
 level = "info"
+
+# 闲鱼平台接入配置（支持网页版 Cookie/MTOP 接入、闲鱼管家开放平台 API 接入、Webhook 回调）
+[xianyu]
+enabled = true
+webhook_secret = "xianyu-dev-secret-2026"
+h5_app_key = "34839810"
+open_api_base = "https://open.goofish.com"
+reply_template = "【自动发货】感谢购买《{product_name}》！\n您的订单号：{order_id}\n发货内容：{delivery_content}\n如有问题请随时留言。"
