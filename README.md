@@ -193,7 +193,7 @@ docker network connect autodeliver astrbot
 
 ## QQ Bot 集成（AstrBot 插件）
 
-插件已独立成仓：[`astrbot_plugin_xianyu_autodeliver`](https://github.com/Makima04/astrbot_plugin_xianyu_autodeliver)，
+插件已独立成仓：[`autodeliver_astrbot`](https://github.com/Makima04/autodeliver_astrbot)，
 把本平台接到 QQ：用 `/闲鱼登录` 登录管理端、`/闲鱼扫码` 扫码添加账号、`/闲鱼删除 <id>` 指定删除、
 `/闲鱼搜索 switch` 实时搜索并由大模型总结后回传到 QQ。
 
