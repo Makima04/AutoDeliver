@@ -349,22 +349,22 @@ function opsMessagesEnsureSkeleton() {
       <div id="ops-msg-body" class="space-y-4">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
-            <div class="text-xs font-medium text-slate-500">💬 会话数</div>
+            <div class="text-xs font-medium text-slate-500">会话数</div>
             <div id="ops-msg-stat-conversations" class="text-2xl font-bold text-slate-900 mt-1">-</div>
             <div class="text-[11px] text-slate-400 mt-0.5">全部私信会话</div>
           </div>
           <div class="bg-white rounded-xl p-4 border border-rose-200 shadow-sm">
-            <div class="text-xs font-medium text-rose-600">🔴 未读数</div>
+            <div class="text-xs font-medium text-rose-600">未读数</div>
             <div id="ops-msg-stat-unread" class="text-2xl font-bold text-rose-600 mt-1">-</div>
             <div class="text-[11px] text-slate-400 mt-0.5">等待回复的买家消息</div>
           </div>
           <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
-            <div class="text-xs font-medium text-indigo-600">📨 今日消息</div>
+            <div class="text-xs font-medium text-indigo-600">今日消息</div>
             <div id="ops-msg-stat-today" class="text-2xl font-bold text-indigo-600 mt-1">-</div>
             <div class="text-[11px] text-slate-400 mt-0.5">今天收发的消息总数</div>
           </div>
           <div class="bg-white rounded-xl p-4 border border-emerald-200 shadow-sm">
-            <div class="text-xs font-medium text-emerald-600">🟢 进行中会话</div>
+            <div class="text-xs font-medium text-emerald-600">进行中会话</div>
             <div id="ops-msg-stat-open" class="text-2xl font-bold text-emerald-600 mt-1">-</div>
             <div class="text-[11px] text-slate-400 mt-0.5">状态为 open 的会话</div>
           </div>
@@ -397,11 +397,11 @@ function opsMessagesEnsureSkeleton() {
             <div class="flex flex-wrap items-center gap-2">
               <button type="button" onclick="opsMessagesApplyFilters()"
                 class="px-3.5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs">
-                🔍 筛选
+                筛选
               </button>
               <button type="button" id="ops-msg-sync-btn" onclick="opsMessagesSync()"
                 class="px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-xs">
-                🔄 同步消息
+                同步消息
               </button>
               <button type="button" onclick="opsMessagesRefresh()"
                 class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border border-slate-300 shadow-xs">
@@ -522,7 +522,7 @@ function opsMessagesRenderList() {
       ? `<a href="${opsEscape(opsItemUrl(itemId))}" target="_blank" rel="noopener noreferrer"
             onclick="event.stopPropagation()"
             class="px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-600 hover:bg-indigo-100 text-[10px] truncate max-w-[160px]"
-            title="在闲鱼打开该宝贝">🏷 ${opsEscape(itemLabel)}</a>`
+            title="在闲鱼打开该宝贝">${opsEscape(itemLabel)}</a>`
       : '';
     const account = state.accounts.find((item) => Number(item.id) === Number(conversation.account_id));
     const accountName = account
@@ -605,7 +605,7 @@ function opsMessagesRenderHeader(conversation) {
   const metaEl = document.getElementById('ops-msg-active-meta');
   const itemHtml = itemId
     ? ` · <a href="${opsEscape(opsItemUrl(itemId))}" target="_blank" rel="noopener noreferrer"
-          class="text-indigo-600 hover:underline" title="在闲鱼打开该宝贝">🏷 ${opsEscape(itemTitle || `宝贝 ${itemId}`)}</a>`
+          class="text-indigo-600 hover:underline" title="在闲鱼打开该宝贝">${opsEscape(itemTitle || `宝贝 ${itemId}`)}</a>`
     : '';
 
   opsSetText('ops-msg-active-title', `${buyerNick}${data.buyer_id ? ` · ${data.buyer_id}` : ''}`);
@@ -1069,17 +1069,17 @@ function opsAutoDeliverEnsureSkeleton() {
       <div id="ops-ad-body" class="space-y-4">
         <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
           <div class="bg-white rounded-xl p-4 border border-emerald-200 shadow-sm">
-            <div class="text-xs font-medium text-emerald-600">✅ 今日成功</div>
+            <div class="text-xs font-medium text-emerald-600">今日成功</div>
             <div id="ops-ad-stat-success" class="text-2xl font-bold text-emerald-600 mt-1">-</div>
             <div class="text-[11px] text-slate-400 mt-0.5">今天自动发货成功</div>
           </div>
           <div class="bg-white rounded-xl p-4 border border-rose-200 shadow-sm">
-            <div class="text-xs font-medium text-rose-600">❌ 今日失败</div>
+            <div class="text-xs font-medium text-rose-600">今日失败</div>
             <div id="ops-ad-stat-failed" class="text-2xl font-bold text-rose-600 mt-1">-</div>
             <div class="text-[11px] text-slate-400 mt-0.5">今天自动发货失败</div>
           </div>
           <div class="bg-white rounded-xl p-4 border border-indigo-200 shadow-sm">
-            <div class="text-xs font-medium text-indigo-600">📈 成功率</div>
+            <div class="text-xs font-medium text-indigo-600">成功率</div>
             <div id="ops-ad-stat-rate" class="text-2xl font-bold text-indigo-600 mt-1">-</div>
             <div class="text-[11px] text-slate-400 mt-0.5">成功 / 全部发货尝试</div>
           </div>
@@ -1089,7 +1089,7 @@ function opsAutoDeliverEnsureSkeleton() {
             <div class="text-[11px] text-slate-400 mt-0.5">等待自动扫描处理</div>
           </div>
           <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
-            <div class="text-xs font-medium text-slate-500">🔑 可用卡密</div>
+            <div class="text-xs font-medium text-slate-500">可用卡密</div>
             <div id="ops-ad-stat-codes" class="text-2xl font-bold text-slate-900 mt-1">-</div>
             <div class="text-[11px] text-slate-400 mt-0.5">全部商品未使用卡密</div>
           </div>
@@ -1185,7 +1185,7 @@ function opsAutoDeliverEnsureSkeleton() {
               </p>
               <button type="button" id="ops-ad-save" onclick="opsAutoDeliverSave()"
                 class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs">
-                💾 保存配置
+                保存配置
               </button>
             </div>
           </div>
@@ -1205,7 +1205,7 @@ function opsAutoDeliverEnsureSkeleton() {
               </button>
               <button type="button" id="ops-ad-scan" onclick="opsAutoDeliverScan()"
                 class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs">
-                ⚡ 立即扫描
+                立即扫描
               </button>
             </div>
           </div>
@@ -1372,8 +1372,8 @@ function opsAutoDeliverRenderReadiness(items) {
         <td class="py-3 px-3">${accountCell}</td>
         <td class="py-3 px-3">
           ${ready
-            ? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-semibold">✅ 就绪</span>'
-            : '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-[11px] font-semibold">⛔ 未就绪</span>'}
+            ? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-semibold">就绪</span>'
+            : '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-[11px] font-semibold">未就绪</span>'}
         </td>
         <td class="py-3 px-5 text-xs ${ready ? 'text-slate-400' : 'text-rose-600'}">
           ${ready ? '-' : opsEscape(row.issue || '未满足自动发货条件')}
@@ -1557,7 +1557,7 @@ async function opsAutoDeliverSave() {
   } finally {
     if (saveButton) {
       saveButton.disabled = false;
-      saveButton.textContent = '💾 保存配置';
+      saveButton.textContent = '保存配置';
       saveButton.classList.remove('opacity-60', 'cursor-not-allowed');
     }
   }
@@ -1590,7 +1590,7 @@ async function opsAutoDeliverScan() {
     state.scanning = false;
     if (scanButton) {
       scanButton.disabled = false;
-      scanButton.textContent = '⚡ 立即扫描';
+      scanButton.textContent = '立即扫描';
       scanButton.classList.remove('opacity-60', 'cursor-not-allowed');
     }
   }
@@ -1627,27 +1627,27 @@ function opsDeliveriesEnsureSkeleton() {
       <div id="ops-dlv-body" class="space-y-4">
         <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4">
           <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
-            <div class="text-xs font-medium text-slate-500">📋 总记录</div>
+            <div class="text-xs font-medium text-slate-500">总记录</div>
             <div id="ops-dlv-stat-total" class="text-2xl font-bold text-slate-900 mt-1">-</div>
             <div class="text-[11px] text-slate-400 mt-0.5">全部发货流水</div>
           </div>
           <div class="bg-white rounded-xl p-4 border border-emerald-200 shadow-sm">
-            <div class="text-xs font-medium text-emerald-600">✅ 成功</div>
+            <div class="text-xs font-medium text-emerald-600">成功</div>
             <div id="ops-dlv-stat-success" class="text-2xl font-bold text-emerald-600 mt-1">-</div>
             <div class="text-[11px] text-slate-400 mt-0.5">成功发货记录</div>
           </div>
           <div class="bg-white rounded-xl p-4 border border-rose-200 shadow-sm">
-            <div class="text-xs font-medium text-rose-600">❌ 失败</div>
+            <div class="text-xs font-medium text-rose-600">失败</div>
             <div id="ops-dlv-stat-failed" class="text-2xl font-bold text-rose-600 mt-1">-</div>
             <div class="text-[11px] text-slate-400 mt-0.5">失败发货记录</div>
           </div>
           <div class="bg-white rounded-xl p-4 border border-indigo-200 shadow-sm">
-            <div class="text-xs font-medium text-indigo-600">📅 今日</div>
+            <div class="text-xs font-medium text-indigo-600">今日</div>
             <div id="ops-dlv-stat-today" class="text-2xl font-bold text-indigo-600 mt-1">-</div>
             <div class="text-[11px] text-slate-400 mt-0.5">今天产生的记录</div>
           </div>
           <div class="bg-white rounded-xl p-4 border border-emerald-200 shadow-sm">
-            <div class="text-xs font-medium text-emerald-600">📈 成功率</div>
+            <div class="text-xs font-medium text-emerald-600">成功率</div>
             <div id="ops-dlv-stat-rate" class="text-2xl font-bold text-emerald-600 mt-1">-</div>
             <div class="text-[11px] text-slate-400 mt-0.5">成功 / 全部记录</div>
           </div>
@@ -1665,8 +1665,8 @@ function opsDeliveriesEnsureSkeleton() {
               <select id="ops-dlv-status" onchange="opsDeliveriesStatusChanged(this.value)"
                 class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:border-indigo-500">
                 <option value="">全部状态</option>
-                <option value="success">✅ 成功</option>
-                <option value="failed">❌ 失败</option>
+                <option value="success">成功</option>
+                <option value="failed">失败</option>
                 <option value="pending">⏳ 处理中</option>
               </select>
             </div>
@@ -1686,7 +1686,7 @@ function opsDeliveriesEnsureSkeleton() {
             <div class="flex flex-wrap items-center gap-2">
               <button type="button" onclick="opsDeliveriesApplyFilters()"
                 class="px-3.5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs">
-                🔍 筛选
+                筛选
               </button>
               <button type="button" onclick="opsDeliveriesRefresh()"
                 class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border border-slate-300 shadow-xs">
@@ -1694,7 +1694,7 @@ function opsDeliveriesEnsureSkeleton() {
               </button>
               <button type="button" id="ops-dlv-export" onclick="opsDeliveriesExport()"
                 class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs">
-                ⬇️ 导出 CSV
+                导出 CSV
               </button>
             </div>
           </div>
@@ -1768,10 +1768,10 @@ function opsDeliveriesStatusText(status) {
 
 function opsDeliveriesStatusBadge(status) {
   if (status === 'success') {
-    return '<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-semibold">✅ 成功</span>';
+    return '<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-semibold">成功</span>';
   }
   if (status === 'failed') {
-    return '<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-[11px] font-semibold">❌ 失败</span>';
+    return '<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-[11px] font-semibold">失败</span>';
   }
   if (status === 'pending') {
     return '<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-semibold">⏳ 处理中</span>';
@@ -1859,7 +1859,7 @@ function opsDeliveriesRenderTable() {
         </td>
         <td class="py-3 px-3">
           ${contentCell}
-          ${row.error_message ? '<div class="text-[10px] text-rose-500 mt-0.5" title="' + opsEscape(row.error_message) + '">⚠ 有错误信息</div>' : ''}
+          ${row.error_message ? '<div class="text-[10px] text-rose-500 mt-0.5" title="' + opsEscape(row.error_message) + '">有错误信息</div>' : ''}
         </td>
         <td class="py-3 px-3 space-y-0.5">
           <div class="text-[10px] text-slate-400">发货：${opsDeliveriesRemoteStatus(row.remote_consign_status)}</div>
@@ -2218,7 +2218,7 @@ async function opsDeliveriesExport() {
   } finally {
     if (button) {
       button.disabled = false;
-      button.textContent = '⬇️ 导出 CSV';
+      button.textContent = '导出 CSV';
       button.classList.remove('opacity-60', 'cursor-not-allowed');
     }
   }
